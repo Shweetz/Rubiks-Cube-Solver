@@ -8,7 +8,7 @@ public class Model {
 	public Model() 
 	{
 		InitialisationGrille();
-		RemplirGrille();
+		//RemplirGrille();
 	}
 	
 	void InitialisationGrille()
@@ -130,25 +130,117 @@ public class Model {
 			
 			else if (faceTurnNumber == 1)
 			{
-				temp1 = rubiksCube[2][2][0];
-				temp2 = rubiksCube[2][2][1];
-				temp3 = rubiksCube[2][2][2];
+				temp1 = rubiksCube[2][2][2];
+				temp2 = rubiksCube[2][1][2];
+				temp3 = rubiksCube[2][0][2];
 				
-				rubiksCube[2][2][0] = rubiksCube[4][2][2];
-				rubiksCube[2][2][1] = rubiksCube[4][1][2];
-				rubiksCube[2][2][2] = rubiksCube[4][0][2];
+				rubiksCube[2][2][2] = rubiksCube[0][2][2];
+				rubiksCube[2][1][2] = rubiksCube[0][1][2];
+				rubiksCube[2][0][2] = rubiksCube[0][0][2];
 				
-				rubiksCube[4][2][2] = rubiksCube[5][0][2];
-				rubiksCube[4][1][2] = rubiksCube[5][0][1];
-				rubiksCube[4][0][2] = rubiksCube[5][0][0];
+				rubiksCube[0][2][2] = rubiksCube[5][2][2];
+				rubiksCube[0][1][2] = rubiksCube[5][1][2];
+				rubiksCube[0][0][2] = rubiksCube[5][0][2];
 				
-				rubiksCube[5][0][2] = rubiksCube[1][0][0];
-				rubiksCube[5][0][1] = rubiksCube[1][1][0];
-				rubiksCube[5][0][0] = rubiksCube[1][2][0];
+				rubiksCube[5][2][2] = rubiksCube[3][0][0];
+				rubiksCube[5][1][2] = rubiksCube[3][1][0];
+				rubiksCube[5][0][2] = rubiksCube[3][2][0];
+				
+				rubiksCube[3][0][0] = temp1;
+				rubiksCube[3][1][0] = temp2;
+				rubiksCube[3][2][0] = temp3;
+			}
+			
+			else if (faceTurnNumber == 2)
+			{
+				temp1 = rubiksCube[3][0][0];
+				temp2 = rubiksCube[3][0][1];
+				temp3 = rubiksCube[3][0][2];
+				
+				rubiksCube[3][0][0] = rubiksCube[4][0][0];
+				rubiksCube[3][0][1] = rubiksCube[4][0][1];
+				rubiksCube[3][0][2] = rubiksCube[4][0][2];
+				
+				rubiksCube[4][0][0] = rubiksCube[0][0][0];
+				rubiksCube[4][0][1] = rubiksCube[0][0][1];
+				rubiksCube[4][0][2] = rubiksCube[0][0][2];
+				
+				rubiksCube[0][0][0] = rubiksCube[1][0][0];
+				rubiksCube[0][0][1] = rubiksCube[1][0][1];
+				rubiksCube[0][0][2] = rubiksCube[1][0][2];
 				
 				rubiksCube[1][0][0] = temp1;
-				rubiksCube[1][1][0] = temp2;
-				rubiksCube[1][2][0] = temp3;
+				rubiksCube[1][0][1] = temp2;
+				rubiksCube[1][0][2] = temp3;
+			}
+			
+			else if (faceTurnNumber == 3)
+			{
+				temp1 = rubiksCube[2][0][2];
+				temp2 = rubiksCube[2][0][1];
+				temp3 = rubiksCube[2][0][0];
+				
+				rubiksCube[2][0][2] = rubiksCube[1][2][2];
+				rubiksCube[2][0][1] = rubiksCube[1][1][2];
+				rubiksCube[2][0][0] = rubiksCube[1][0][2];
+				
+				rubiksCube[1][2][2] = rubiksCube[5][2][0];
+				rubiksCube[1][1][2] = rubiksCube[5][2][1];
+				rubiksCube[1][0][2] = rubiksCube[5][2][2];
+				
+				rubiksCube[5][2][0] = rubiksCube[4][0][0];
+				rubiksCube[5][2][1] = rubiksCube[4][1][0];
+				rubiksCube[5][2][2] = rubiksCube[4][2][0];
+				
+				rubiksCube[4][0][0] = temp1;
+				rubiksCube[4][1][0] = temp2;
+				rubiksCube[4][2][0] = temp3;
+			}
+			
+			else if (faceTurnNumber == 4)
+			{
+				temp1 = rubiksCube[2][0][0];
+				temp2 = rubiksCube[2][1][0];
+				temp3 = rubiksCube[2][2][0];
+				
+				rubiksCube[2][0][0] = rubiksCube[3][2][2];
+				rubiksCube[2][1][0] = rubiksCube[3][1][2];
+				rubiksCube[2][2][0] = rubiksCube[3][0][2];
+				
+				rubiksCube[3][2][2] = rubiksCube[5][0][0];
+				rubiksCube[3][1][2] = rubiksCube[5][1][0];
+				rubiksCube[3][0][2] = rubiksCube[5][2][0];
+				
+				rubiksCube[5][0][0] = rubiksCube[0][0][0];
+				rubiksCube[5][1][0] = rubiksCube[0][1][0];
+				rubiksCube[5][2][0] = rubiksCube[0][2][0];
+				
+				rubiksCube[0][0][0] = temp1;
+				rubiksCube[0][1][0] = temp2;
+				rubiksCube[0][2][0] = temp3;
+			}
+			
+			else if (faceTurnNumber == 5)
+			{
+				temp1 = rubiksCube[3][2][0];
+				temp2 = rubiksCube[3][2][1];
+				temp3 = rubiksCube[3][2][2];
+				
+				rubiksCube[3][2][0] = rubiksCube[1][2][0];
+				rubiksCube[3][2][1] = rubiksCube[1][2][1];
+				rubiksCube[3][2][2] = rubiksCube[1][2][2];
+				
+				rubiksCube[1][2][0] = rubiksCube[0][2][0];
+				rubiksCube[1][2][1] = rubiksCube[0][2][1];
+				rubiksCube[1][2][2] = rubiksCube[0][2][2];
+				
+				rubiksCube[0][2][0] = rubiksCube[4][2][0];
+				rubiksCube[0][2][1] = rubiksCube[4][2][1];
+				rubiksCube[0][2][2] = rubiksCube[4][2][2];
+				
+				rubiksCube[4][2][0] = temp1;
+				rubiksCube[4][2][1] = temp2;
+				rubiksCube[4][2][2] = temp3;
 			}
 		}
 	}

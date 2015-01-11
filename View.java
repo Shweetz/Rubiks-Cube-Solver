@@ -11,7 +11,7 @@ public class View extends JFrame implements ActionListener, KeyListener {
 	
 	Model game;
 	//Color[][][] rubiksCubeView = new Color[6][3][3];
-	int faceAvant = 0;   // 0 : blanc
+	int faceAvant = 0;   // 0 : face avec centre blanc
 	int faceDroite = 1;  // 1 : bleu
 	int faceHaut = 2;    // 2 : orange
 	int faceArriere = 3; // 3 : jaune
@@ -19,15 +19,18 @@ public class View extends JFrame implements ActionListener, KeyListener {
 	int faceBas = 5;     // 5 : rouge
 	
 	JPanel panelGeneral;
-	JPanel[][] jp;
-	
+	JButton[][] faceUnitaire;
+
 	File fileChosen = null;
+	int curI = -1;
+	int curJ = -1;
+	int turnTimes;
 	
 	public View(int largeur, int hauteur){ //on cree la fenetre
 		super("Rubik's Cube");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(largeur, hauteur);
-		setLocationRelativeTo(null); // La fenêtre apparai au centre de l'écran
+		setLocationRelativeTo(null); // La fenêtre apparait au centre de l'écran
 
 		creerMenus();  
 		creerInterface();
@@ -84,27 +87,128 @@ public class View extends JFrame implements ActionListener, KeyListener {
         };
         ajouterItem("Quitter", menuFichier, a5, KeyEvent.VK_Q);
 
-        // Menu Action
+        // Menu Tourner Rubik's Cube
+        JMenu menuTournerRubiksCube = new JMenu("Tourner Rubik's Cube");
+        menuTournerRubiksCube.setMnemonic(KeyEvent.VK_T);
+        
+        ActionListener a10 = new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+            	game.turnRubiksCube(0, true);
+            	actualiserFaceAvant();
+            }
+        };
+        ajouterItem("Tourner face blanche sens horaire", menuTournerRubiksCube, a10);
+        
+        ActionListener a11 = new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+            	game.turnRubiksCube(0, false);
+            	actualiserFaceAvant();
+            }
+        };
+        ajouterItem("Tourner face blanche sens anti-horaire", menuTournerRubiksCube, a11);
+        
+        ActionListener a12 = new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+            	game.turnRubiksCube(1, true);
+            	actualiserFaceAvant();
+            }
+        };
+        ajouterItem("Tourner face bleue sens horaire", menuTournerRubiksCube, a12);
+        
+        ActionListener a13 = new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+            	game.turnRubiksCube(1, false);
+            	actualiserFaceAvant();
+            }
+        };
+        ajouterItem("Tourner face bleue sens anti-horaire", menuTournerRubiksCube, a13);
+        
+        ActionListener a14 = new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+            	game.turnRubiksCube(2, true);
+            	actualiserFaceAvant();
+            }
+        };
+        ajouterItem("Tourner face orange sens horaire", menuTournerRubiksCube, a14);
+        
+        ActionListener a15 = new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+            	game.turnRubiksCube(2, false);
+            	actualiserFaceAvant();
+            }
+        };
+        ajouterItem("Tourner face orange sens anti-horaire", menuTournerRubiksCube, a15);
+        
+        ActionListener a16 = new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+            	game.turnRubiksCube(3, true);
+            	actualiserFaceAvant();
+            }
+        };
+        ajouterItem("Tourner face jaune sens horaire", menuTournerRubiksCube, a16);
+        
+        ActionListener a17 = new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+            	game.turnRubiksCube(3, false);
+            	actualiserFaceAvant();
+            }
+        };
+        ajouterItem("Tourner face jaune sens anti-horaire", menuTournerRubiksCube, a17);
+        
+        ActionListener a18 = new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+            	game.turnRubiksCube(4, true);
+            	actualiserFaceAvant();
+            }
+        };
+        ajouterItem("Tourner face verte sens horaire", menuTournerRubiksCube, a18);
+        
+        ActionListener a19 = new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+            	game.turnRubiksCube(4, false);
+            	actualiserFaceAvant();
+            }
+        };
+        ajouterItem("Tourner face verte sens anti-horaire", menuTournerRubiksCube, a19);
+        
+        ActionListener a1a = new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+            	game.turnRubiksCube(5, true);
+            	actualiserFaceAvant();
+            }
+        };
+        ajouterItem("Tourner face rouge sens horaire", menuTournerRubiksCube, a1a);
+        
+        ActionListener a1b = new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+            	game.turnRubiksCube(5, false);
+            	actualiserFaceAvant();
+            }
+        };
+        ajouterItem("Tourner face rouge sens anti-horaire", menuTournerRubiksCube, a1b);
+
+        // Menu Resoudre
         JMenu menuResoudre = new JMenu("Résoudre");
         menuResoudre.setMnemonic(KeyEvent.VK_R);
         
-        ActionListener a10 = new ActionListener(){
+        ActionListener a20 = new ActionListener(){
             public void actionPerformed(ActionEvent e){
             	//chargerFichier("./Sudoku Database/Facile");
             }
         };
-        ajouterItem("Résoudre complètement", menuResoudre, a10);
+        ajouterItem("Résoudre complètement", menuResoudre, a20);
         
-        ActionListener a11 = new ActionListener(){
+        ActionListener a21 = new ActionListener(){
             public void actionPerformed(ActionEvent e){
             	//chargerFichier("./Sudoku Database/Moyen");
             }
         };
-        ajouterItem("Faire une face", menuResoudre, a11);
+        ajouterItem("Faire une face", menuResoudre, a21);
         
          // Relier les menus à la fenêtre
 		JMenuBar barreDeMenu = new JMenuBar();
 		barreDeMenu.add(menuFichier);
+		barreDeMenu.add(menuTournerRubiksCube);
 		barreDeMenu.add(menuResoudre);
 		this.setJMenuBar(barreDeMenu);
 	}
@@ -174,18 +278,18 @@ public class View extends JFrame implements ActionListener, KeyListener {
 		panelGeneral.setLayout(new GridLayout(3,3)); 
 		
 		// On crée les couleurs de la face de devant
-		jp = new JPanel[3][3];
+		faceUnitaire = new JButton[3][3];
 		for(int i=0;i<3;i++)
 		{
 			for(int j=0;j<3;j++)
 			{
-				jp[i][j] = new JPanel();
-				jp[i][j].setBorder(BorderFactory.createEtchedBorder());
-				jp[i][j].setBackground(face[i][j]);
-				//jp[i][j].addActionListener(this);
-				jp[i][j].setFocusable(true); // Nécessaire pour addKeyListener
-				jp[i][j].addKeyListener(this);
-				panelGeneral.add(jp[i][j]);
+				faceUnitaire[i][j] = new JButton();
+				faceUnitaire[i][j].setBorder(BorderFactory.createEtchedBorder());
+				faceUnitaire[i][j].setBackground(face[i][j]);
+				faceUnitaire[i][j].addActionListener(this);
+				faceUnitaire[i][j].setFocusable(true); // Nécessaire pour addKeyListener
+				faceUnitaire[i][j].addKeyListener(this);
+				panelGeneral.add(faceUnitaire[i][j]);
 			}
 		}
 		
@@ -275,17 +379,155 @@ public class View extends JFrame implements ActionListener, KeyListener {
 		// On récupère la face avant
 		Color[][] face = game.getFace(faceAvant);
 		
+		/* Les face latérales sont orientées vers la face haut
+		 * La face haut est orientée vers la face arriere
+		 * La face bas est orientée vers la face avant*/
+		
+		// On la tourne si besoin (2 est la faceHaut par défaut (orange) et 0 faceAvant (blanc)
+		turnTimes = -1;
+		
+		if (faceHaut == 2)
+		{
+			turnTimes = 0;
+		}
+		else if (faceBas == 2)
+		{
+			turnTimes = 2;
+		}
+		else if (faceGauche == 2)
+		{
+			turnTimes = 3;
+		}
+		else if (faceDroite == 2)
+		{
+			turnTimes = 1;
+		}
+		else if (faceAvant == 2)
+		{
+			if (faceHaut == 0)
+			{
+				turnTimes = 2;
+			}
+			else if (faceBas == 0)
+			{
+				turnTimes = 0;
+			}
+			else if (faceGauche == 0)
+			{
+				turnTimes = 1;
+			}
+			else if (faceDroite == 0)
+			{
+				turnTimes = 3;
+			}
+		}
+		else if (faceArriere == 2)
+		{
+			if (faceHaut == 0)
+			{
+				turnTimes = 0;
+			}
+			else if (faceBas == 0)
+			{
+				turnTimes = 2;
+			}
+			else if (faceGauche == 0)
+			{
+				turnTimes = 3;
+			}
+			else if (faceDroite == 0)
+			{
+				turnTimes = 1;
+			}
+		}
+		
+		for (int i = 0; i < turnTimes; i++)
+		{
+			face = game.turnFace(face);
+		}
+		
 		// On l'affiche
 		for(int i=0;i<3;i++)
 		{
 			for(int j=0;j<3;j++)
 			{
-				jp[i][j].setBackground(face[i][j]);
+				faceUnitaire[i][j].setBackground(face[i][j]);
 			}
 		}
 	}
 	
-	public void actionPerformed (ActionEvent e) {
+	private void changerFace()
+	{
+		faceUnitaire[curI][curJ].setBorder(BorderFactory.createEtchedBorder());
+		curI = 0;
+		curJ = 0;
+		faceUnitaire[curI][curJ].setBorder(BorderFactory.createMatteBorder(25, 25, 25, 25, Color.black));
+		
+		actualiserFaceAvant();
+	}
+	
+	private void changerUneCouleur(Color newColor)
+	{		
+		// On récupère le modèle
+		Color[][] face = game.rubiksCube[faceAvant];
+		// On le tourne pour qu'il soit en phase avec la vue
+		for (int i = 0; i < turnTimes; i++)
+		{
+			face = game.turnFace(face);
+		}
+		// On modifie dans le modèle la case cliquée dans la vue
+		face[curI][curJ] = newColor;
+		// On re-tourne le modèle dans le bon sens
+		for (int i = 0; i < 4-turnTimes; i++)
+		{
+			face = game.turnFace(face);
+		}
+		// On actualise le modèle
+		game.rubiksCube[faceAvant] = face;
+		
+		// On actualise la vue
+		actualiserFaceAvant();
+	}
+	
+	private void nextCell()
+	{
+		faceUnitaire[curI][curJ].setBorder(BorderFactory.createEtchedBorder());
+		if (curJ != 2)
+		{
+			curJ++;	
+		}
+		else if (curJ == 2 && curI != 2)
+		{
+			curI++;		
+			curJ = 0;		
+		}
+		faceUnitaire[curI][curJ].setBorder(BorderFactory.createMatteBorder(25, 25, 25, 25, Color.black));
+	}
+	
+	public void actionPerformed (ActionEvent e) // Clic sur une case
+	{
+		// On met les bordures par défaut sauf la case sélectionnée s'il y en a une
+		// S'il y en a une, on note ses coordonnées
+		curI = -1;
+		curJ = -1;
+		
+		for(int i=0;i<3;i++)
+		{
+			for(int j=0;j<3;j++) 
+			{
+				if (i != 1 || j != 1)
+				{
+					faceUnitaire[i][j].setBorder(BorderFactory.createEtchedBorder());
+					
+					if(e.getSource() == faceUnitaire[i][j])
+					{
+						faceUnitaire[i][j].setBorder(BorderFactory.createMatteBorder(25, 25, 25, 25, Color.black));
+						curI = i;
+						curJ = j;
+					}
+				}
+			}
+		}
 	}
 	
 	public void keyPressed(KeyEvent evt) { 
@@ -299,14 +541,7 @@ public class View extends JFrame implements ActionListener, KeyListener {
 			faceArriere = faceDroite;
 			faceDroite = temp;
 			
-			// Les faces changent d'orientation
-			game.setFace(faceHaut, game.turnFace(game.getFace(faceHaut)));
-			game.setFace(faceHaut, game.turnFace(game.getFace(faceHaut)));
-			game.setFace(faceHaut, game.turnFace(game.getFace(faceHaut)));
-
-			game.setFace(faceBas, game.turnFace(game.getFace(faceBas)));
-			
-			actualiserFaceAvant();
+			changerFace();
 		}
 		if (evt.getKeyCode() == KeyEvent.VK_RIGHT || evt.getKeyCode() == KeyEvent.VK_KP_RIGHT) 
 		{
@@ -316,15 +551,8 @@ public class View extends JFrame implements ActionListener, KeyListener {
 			faceDroite = faceArriere;
 			faceArriere = faceGauche;
 			faceGauche = temp;
-
-			// Les faces changent d'orientation
-			game.setFace(faceHaut, game.turnFace(game.getFace(faceHaut)));
 			
-			game.setFace(faceBas, game.turnFace(game.getFace(faceBas)));
-			game.setFace(faceBas, game.turnFace(game.getFace(faceBas)));
-			game.setFace(faceBas, game.turnFace(game.getFace(faceBas)));
-			
-			actualiserFaceAvant();
+			changerFace();
 		}
 		if (evt.getKeyCode() == KeyEvent.VK_UP || evt.getKeyCode() == KeyEvent.VK_KP_UP) 
 		{
@@ -334,21 +562,8 @@ public class View extends JFrame implements ActionListener, KeyListener {
 			faceHaut = faceArriere;
 			faceArriere = faceBas;
 			faceBas = temp;
-
-			// Les faces changent d'orientation
-			game.setFace(faceHaut, game.turnFace(game.getFace(faceHaut)));
-			game.setFace(faceHaut, game.turnFace(game.getFace(faceHaut)));
 			
-			game.setFace(faceArriere, game.turnFace(game.getFace(faceArriere)));
-			game.setFace(faceArriere, game.turnFace(game.getFace(faceArriere)));
-			
-			game.setFace(faceGauche, game.turnFace(game.getFace(faceGauche)));
-			
-			game.setFace(faceDroite, game.turnFace(game.getFace(faceDroite)));
-			game.setFace(faceDroite, game.turnFace(game.getFace(faceDroite)));
-			game.setFace(faceDroite, game.turnFace(game.getFace(faceDroite)));
-			
-			actualiserFaceAvant();
+			changerFace();
 		}
 		if (evt.getKeyCode() == KeyEvent.VK_DOWN || evt.getKeyCode() == KeyEvent.VK_KP_DOWN) 
 		{
@@ -358,32 +573,65 @@ public class View extends JFrame implements ActionListener, KeyListener {
 			faceBas = faceArriere;
 			faceArriere = faceHaut;
 			faceHaut = temp;
+			
+			changerFace();
+		}
 
-			// Les faces changent d'orientation
-			game.setFace(faceBas, game.turnFace(game.getFace(faceBas)));
-			game.setFace(faceBas, game.turnFace(game.getFace(faceBas)));
+		if (evt.getKeyCode() == KeyEvent.VK_W) // Si une case est sélectionnée, elle devient blanche 
+		{			
+			if (curI >= 0 && curI <= 2 && curJ >= 0 && curJ <= 2 && (curI != 1 || curJ != 1))
+				changerUneCouleur(Color.white);
 			
-			game.setFace(faceArriere, game.turnFace(game.getFace(faceArriere)));
-			game.setFace(faceArriere, game.turnFace(game.getFace(faceArriere)));
+			nextCell();		
+		}
 
-			game.setFace(faceGauche, game.turnFace(game.getFace(faceGauche)));
-			game.setFace(faceGauche, game.turnFace(game.getFace(faceGauche)));
-			game.setFace(faceGauche, game.turnFace(game.getFace(faceGauche)));
+		if (evt.getKeyCode() == KeyEvent.VK_B) // Si une case est sélectionnée, elle devient blue 
+		{			
+			if (curI >= 0 && curI <= 2 && curJ >= 0 && curJ <= 2 && (curI != 1 || curJ != 1))
+				changerUneCouleur(Color.blue);
 			
-			game.setFace(faceDroite, game.turnFace(game.getFace(faceDroite)));
+			nextCell();		
+		}
+
+		if (evt.getKeyCode() == KeyEvent.VK_O) // Si une case est sélectionnée, elle devient orange 
+		{			
+			if (curI >= 0 && curI <= 2 && curJ >= 0 && curJ <= 2 && (curI != 1 || curJ != 1))
+				changerUneCouleur(Color.orange);
 			
-			actualiserFaceAvant();
+			nextCell();		
+		}
+
+		if (evt.getKeyCode() == KeyEvent.VK_Y) // Si une case est sélectionnée, elle devient jaune 
+		{			
+			if (curI >= 0 && curI <= 2 && curJ >= 0 && curJ <= 2 && (curI != 1 || curJ != 1))
+				changerUneCouleur(Color.yellow);
+			
+			nextCell();		
+		}
+
+		if (evt.getKeyCode() == KeyEvent.VK_G) // Si une case est sélectionnée, elle devient verte 
+		{			
+			if (curI >= 0 && curI <= 2 && curJ >= 0 && curJ <= 2 && (curI != 1 || curJ != 1))
+				changerUneCouleur(Color.green);
+			
+			nextCell();		
+		}
+
+		if (evt.getKeyCode() == KeyEvent.VK_R) // Si une case est sélectionnée, elle devient rouge 
+		{			
+			if (curI >= 0 && curI <= 2 && curJ >= 0 && curJ <= 2 && (curI != 1 || curJ != 1))
+				changerUneCouleur(Color.red);
+			
+			nextCell();		
 		}
 
 	}
 	
-	public void keyReleased(KeyEvent evt) { // méthode non implémentée mais
-		// necessaire pour compiler
+	public void keyReleased(KeyEvent evt) { // nécessaire pour compiler
 
 	}
 	
-	public void keyTyped(KeyEvent evt) { // méthode non implémentée mais
-		// necessaire pour compiler
+	public void keyTyped(KeyEvent evt) { // nécessaire pour compiler
 
 	}
 	
