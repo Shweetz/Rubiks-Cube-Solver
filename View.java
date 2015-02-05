@@ -17,8 +17,14 @@ public class View extends JFrame implements ActionListener, KeyListener {
 	int faceArriere = 3; // 3 : jaune
 	int faceGauche = 4;  // 4 : vert 
 	int faceBas = 5;     // 5 : rouge
-	
+
 	JPanel panelGeneral;
+	JPanel panelCube;
+	JPanel panelTexte;
+	JPanel panelEtape;
+	JPanel panelMessage;
+	JTextArea ihmMessage;
+	JTextArea ihmEtape;
 	JButton[][] faceUnitaire;
 
 	File fileChosen = null;
@@ -50,7 +56,7 @@ public class View extends JFrame implements ActionListener, KeyListener {
     			{
     				for(int j=0;j<9;j++)
     				{
-    					game.InitialisationGrille();
+    					game.InitializeGrid();
     				}
     			}
             	actualiserFaceAvant();
@@ -93,7 +99,7 @@ public class View extends JFrame implements ActionListener, KeyListener {
         
         ActionListener a10 = new ActionListener(){
             public void actionPerformed(ActionEvent e){
-            	game.turnRubiksCube(0, true);
+            	game.turnRubiksCube(game.rubiksCube, 0, true);
             	actualiserFaceAvant();
             }
         };
@@ -101,7 +107,7 @@ public class View extends JFrame implements ActionListener, KeyListener {
         
         ActionListener a11 = new ActionListener(){
             public void actionPerformed(ActionEvent e){
-            	game.turnRubiksCube(0, false);
+            	game.turnRubiksCube(game.rubiksCube, 0, false);
             	actualiserFaceAvant();
             }
         };
@@ -109,7 +115,7 @@ public class View extends JFrame implements ActionListener, KeyListener {
         
         ActionListener a12 = new ActionListener(){
             public void actionPerformed(ActionEvent e){
-            	game.turnRubiksCube(1, true);
+            	game.turnRubiksCube(game.rubiksCube, 1, true);
             	actualiserFaceAvant();
             }
         };
@@ -117,7 +123,7 @@ public class View extends JFrame implements ActionListener, KeyListener {
         
         ActionListener a13 = new ActionListener(){
             public void actionPerformed(ActionEvent e){
-            	game.turnRubiksCube(1, false);
+            	game.turnRubiksCube(game.rubiksCube, 1, false);
             	actualiserFaceAvant();
             }
         };
@@ -125,7 +131,7 @@ public class View extends JFrame implements ActionListener, KeyListener {
         
         ActionListener a14 = new ActionListener(){
             public void actionPerformed(ActionEvent e){
-            	game.turnRubiksCube(2, true);
+            	game.turnRubiksCube(game.rubiksCube, 2, true);
             	actualiserFaceAvant();
             }
         };
@@ -133,7 +139,7 @@ public class View extends JFrame implements ActionListener, KeyListener {
         
         ActionListener a15 = new ActionListener(){
             public void actionPerformed(ActionEvent e){
-            	game.turnRubiksCube(2, false);
+            	game.turnRubiksCube(game.rubiksCube, 2, false);
             	actualiserFaceAvant();
             }
         };
@@ -141,7 +147,7 @@ public class View extends JFrame implements ActionListener, KeyListener {
         
         ActionListener a16 = new ActionListener(){
             public void actionPerformed(ActionEvent e){
-            	game.turnRubiksCube(3, true);
+            	game.turnRubiksCube(game.rubiksCube, 3, true);
             	actualiserFaceAvant();
             }
         };
@@ -149,7 +155,7 @@ public class View extends JFrame implements ActionListener, KeyListener {
         
         ActionListener a17 = new ActionListener(){
             public void actionPerformed(ActionEvent e){
-            	game.turnRubiksCube(3, false);
+            	game.turnRubiksCube(game.rubiksCube, 3, false);
             	actualiserFaceAvant();
             }
         };
@@ -157,7 +163,7 @@ public class View extends JFrame implements ActionListener, KeyListener {
         
         ActionListener a18 = new ActionListener(){
             public void actionPerformed(ActionEvent e){
-            	game.turnRubiksCube(4, true);
+            	game.turnRubiksCube(game.rubiksCube, 4, true);
             	actualiserFaceAvant();
             }
         };
@@ -165,7 +171,7 @@ public class View extends JFrame implements ActionListener, KeyListener {
         
         ActionListener a19 = new ActionListener(){
             public void actionPerformed(ActionEvent e){
-            	game.turnRubiksCube(4, false);
+            	game.turnRubiksCube(game.rubiksCube, 4, false);
             	actualiserFaceAvant();
             }
         };
@@ -173,7 +179,7 @@ public class View extends JFrame implements ActionListener, KeyListener {
         
         ActionListener a1a = new ActionListener(){
             public void actionPerformed(ActionEvent e){
-            	game.turnRubiksCube(5, true);
+            	game.turnRubiksCube(game.rubiksCube, 5, true);
             	actualiserFaceAvant();
             }
         };
@@ -181,7 +187,7 @@ public class View extends JFrame implements ActionListener, KeyListener {
         
         ActionListener a1b = new ActionListener(){
             public void actionPerformed(ActionEvent e){
-            	game.turnRubiksCube(5, false);
+            	game.turnRubiksCube(game.rubiksCube, 5, false);
             	actualiserFaceAvant();
             }
         };
@@ -193,14 +199,14 @@ public class View extends JFrame implements ActionListener, KeyListener {
         
         ActionListener a20 = new ActionListener(){
             public void actionPerformed(ActionEvent e){
-            	//chargerFichier("./Sudoku Database/Facile");
+            	game.solve("full");
             }
         };
         ajouterItem("Résoudre complètement", menuResoudre, a20);
         
         ActionListener a21 = new ActionListener(){
             public void actionPerformed(ActionEvent e){
-            	//chargerFichier("./Sudoku Database/Moyen");
+            	game.solve("first face");
             }
         };
         ajouterItem("Faire une face", menuResoudre, a21);
@@ -273,11 +279,49 @@ public class View extends JFrame implements ActionListener, KeyListener {
 		game = new Model();
 		Color[][] face = game.getFace(0);
 		
-		// On crée la face de devant
+		// On crée l'IHM
 		panelGeneral = new JPanel();
-		panelGeneral.setLayout(new GridLayout(3,3)); 
+		panelGeneral.setLayout(new GridLayout(1,2));		
+		panelTexte = new JPanel(new GridLayout(1,2));
+		panelTexte.setBorder(BorderFactory.createEtchedBorder());
+		panelEtape = new JPanel(new BorderLayout());
+		panelEtape.setBorder(BorderFactory.createEtchedBorder());
+		panelMessage = new JPanel(new BorderLayout());
+		panelMessage.setBorder(BorderFactory.createEtchedBorder());
+		panelCube = new JPanel();
+		panelCube.setBorder(BorderFactory.createEtchedBorder());
+		panelCube.setLayout(new GridLayout(3,3)); 		
 		
-		// On crée les couleurs de la face de devant
+		// On crée la zone etape
+		ihmEtape = new JTextArea();
+		ihmEtape.setText("[ ] Faire la 1e face (+ 1e couronne)\n"
+					   + "    [ ] Faire la croix\n"
+					   + "    [ ] Faire les coins\n"
+					   + "[ ] Faire la 2e couronne\n"
+					   + "[ ] Faire la croix de la face opposée\n"
+					   + "[ ] Orienter les bords\n"
+					   + "[ ] Orienter les coins\n");		
+		ihmEtape.setFont(new java.awt.Font("Helvetica", java.awt.Font.PLAIN, 18));
+		ihmEtape.setEditable(false);
+		ihmEtape.setLineWrap(true);
+		ihmEtape.setWrapStyleWord(true);
+		ihmEtape.addKeyListener(this);
+		panelEtape.add(ihmEtape);
+		
+		// On crée la zone message
+		ihmMessage = new JTextArea();
+		ihmMessage.setText("Coucou debug (et TF1)\n"
+						 + "\n"
+						 + "Il n'est pas possible de modifier le centre des faces, il faut changer les couleurs autour.");		
+		ihmMessage.setFont(new java.awt.Font("Helvetica", java.awt.Font.PLAIN, 18));
+		ihmMessage.setEditable(false);
+		ihmMessage.setLineWrap(true);
+		ihmMessage.setWrapStyleWord(true);
+		ihmMessage.addKeyListener(this);
+		JScrollPane scrollPane = new JScrollPane(ihmMessage);
+		panelMessage.add(scrollPane);
+				
+		// On crée la face de devant
 		faceUnitaire = new JButton[3][3];
 		for(int i=0;i<3;i++)
 		{
@@ -289,10 +333,15 @@ public class View extends JFrame implements ActionListener, KeyListener {
 				faceUnitaire[i][j].addActionListener(this);
 				faceUnitaire[i][j].setFocusable(true); // Nécessaire pour addKeyListener
 				faceUnitaire[i][j].addKeyListener(this);
-				panelGeneral.add(faceUnitaire[i][j]);
+				panelCube.add(faceUnitaire[i][j]);
 			}
 		}
 		
+		// On lie le tout		
+		panelTexte.add(panelEtape);	
+		panelTexte.add(panelMessage);	
+		panelGeneral.add(panelTexte);	
+		panelGeneral.add(panelCube);	
 		c.add(panelGeneral);
 	}
 	
@@ -309,20 +358,17 @@ public class View extends JFrame implements ActionListener, KeyListener {
 				{
 					if (j >= 9) break;
 					char c = ligne.charAt(j);
+					Color currentColor = null;
 					
 					// On ne remplit pas si le char n'est pas un chiffre entre 0 et 5
-					if (c == '0') 
-						game.rubiksCube[i][j/3][j%3] = Color.white;
-					else if (c == '1') 
-						game.rubiksCube[i][j/3][j%3] = Color.blue;
-					else if (c == '2') 
-						game.rubiksCube[i][j/3][j%3] = Color.orange;
-					else if (c == '3') 
-						game.rubiksCube[i][j/3][j%3] = Color.yellow;
-					else if (c == '4') 
-						game.rubiksCube[i][j/3][j%3] = Color.green;
-					else if (c == '5') 
-						game.rubiksCube[i][j/3][j%3] = Color.red;
+					if (c == '0') 		currentColor = Color.white;
+					else if (c == '1') 	currentColor = Color.blue;
+					else if (c == '2') 	currentColor = Color.orange;
+					else if (c == '3') 	currentColor = Color.yellow;
+					else if (c == '4') 	currentColor = Color.green;
+					else if (c == '5') 	currentColor = Color.red;
+					
+					game.rubiksCube[i][j/3][j%3] = currentColor;
 				}
 			}
 			raf.close();
@@ -345,22 +391,15 @@ public class View extends JFrame implements ActionListener, KeyListener {
 			{
 				for(int j=0;j<9;j++)
 				{
-					Color c = game.rubiksCube[i][j/3][j%3];
+					Color currentColor = game.rubiksCube[i][j/3][j%3];
 					
-					if (c.equals(Color.white))
-						raf.writeBytes("0");
-					else if (c.equals(Color.blue)) 
-						raf.writeBytes("1");
-					else if (c.equals(Color.orange))
-						raf.writeBytes("2");
-					else if (c.equals(Color.yellow)) 
-						raf.writeBytes("3");
-					else if (c.equals(Color.green)) 
-						raf.writeBytes("4");
-					else if (c.equals(Color.red))
-						raf.writeBytes("5");
-					else
-						raf.writeBytes("?");
+					if (currentColor.equals(Color.white))			raf.writeBytes("0");
+					else if (currentColor.equals(Color.blue)) 		raf.writeBytes("1");
+					else if (currentColor.equals(Color.orange))		raf.writeBytes("2");
+					else if (currentColor.equals(Color.yellow)) 	raf.writeBytes("3");
+					else if (currentColor.equals(Color.green)) 		raf.writeBytes("4");			
+					else if (currentColor.equals(Color.red))		raf.writeBytes("5");
+					else											raf.writeBytes("?");
 				}
 				if (i != 5)
 					raf.writeBytes("\n");
@@ -386,59 +425,23 @@ public class View extends JFrame implements ActionListener, KeyListener {
 		// On la tourne si besoin (2 est la faceHaut par défaut (orange) et 0 faceAvant (blanc)
 		turnTimes = -1;
 		
-		if (faceHaut == 2)
-		{
-			turnTimes = 0;
-		}
-		else if (faceBas == 2)
-		{
-			turnTimes = 2;
-		}
-		else if (faceGauche == 2)
-		{
-			turnTimes = 3;
-		}
-		else if (faceDroite == 2)
-		{
-			turnTimes = 1;
-		}
+		if (faceHaut == 2)				turnTimes = 0;
+		else if (faceBas == 2)			turnTimes = 2;
+		else if (faceGauche == 2)		turnTimes = 3;
+		else if (faceDroite == 2)		turnTimes = 1;
 		else if (faceAvant == 2)
 		{
-			if (faceHaut == 0)
-			{
-				turnTimes = 2;
-			}
-			else if (faceBas == 0)
-			{
-				turnTimes = 0;
-			}
-			else if (faceGauche == 0)
-			{
-				turnTimes = 1;
-			}
-			else if (faceDroite == 0)
-			{
-				turnTimes = 3;
-			}
+			if (faceHaut == 0)			turnTimes = 2;
+			else if (faceBas == 0)		turnTimes = 0;
+			else if (faceGauche == 0)	turnTimes = 1;
+			else if (faceDroite == 0)	turnTimes = 3;
 		}
 		else if (faceArriere == 2)
 		{
-			if (faceHaut == 0)
-			{
-				turnTimes = 0;
-			}
-			else if (faceBas == 0)
-			{
-				turnTimes = 2;
-			}
-			else if (faceGauche == 0)
-			{
-				turnTimes = 3;
-			}
-			else if (faceDroite == 0)
-			{
-				turnTimes = 1;
-			}
+			if (faceHaut == 0)			turnTimes = 0;
+			else if (faceBas == 0)		turnTimes = 2;
+			else if (faceGauche == 0)	turnTimes = 3;
+			else if (faceDroite == 0)	turnTimes = 1;
 		}
 		
 		for (int i = 0; i < turnTimes; i++)
@@ -458,10 +461,13 @@ public class View extends JFrame implements ActionListener, KeyListener {
 	
 	private void changerFace()
 	{
-		faceUnitaire[curI][curJ].setBorder(BorderFactory.createEtchedBorder());
-		curI = 0;
-		curJ = 0;
-		faceUnitaire[curI][curJ].setBorder(BorderFactory.createMatteBorder(25, 25, 25, 25, Color.black));
+		if (curI != -1 && curJ != -1)
+		{
+			faceUnitaire[curI][curJ].setBorder(BorderFactory.createEtchedBorder());
+			curI = 0;
+			curJ = 0;
+			faceUnitaire[curI][curJ].setBorder(BorderFactory.createMatteBorder(10, 10, 10, 10, Color.black));
+		}
 		
 		actualiserFaceAvant();
 	}
@@ -470,18 +476,22 @@ public class View extends JFrame implements ActionListener, KeyListener {
 	{		
 		// On récupère le modèle
 		Color[][] face = game.rubiksCube[faceAvant];
+	
 		// On le tourne pour qu'il soit en phase avec la vue
 		for (int i = 0; i < turnTimes; i++)
 		{
 			face = game.turnFace(face);
 		}
+		
 		// On modifie dans le modèle la case cliquée dans la vue
 		face[curI][curJ] = newColor;
+		
 		// On re-tourne le modèle dans le bon sens
 		for (int i = 0; i < 4-turnTimes; i++)
 		{
 			face = game.turnFace(face);
 		}
+		
 		// On actualise le modèle
 		game.rubiksCube[faceAvant] = face;
 		
@@ -501,7 +511,7 @@ public class View extends JFrame implements ActionListener, KeyListener {
 			curI++;		
 			curJ = 0;		
 		}
-		faceUnitaire[curI][curJ].setBorder(BorderFactory.createMatteBorder(25, 25, 25, 25, Color.black));
+		faceUnitaire[curI][curJ].setBorder(BorderFactory.createMatteBorder(10, 10, 10, 10, Color.black));
 	}
 	
 	public void actionPerformed (ActionEvent e) // Clic sur une case
@@ -515,16 +525,13 @@ public class View extends JFrame implements ActionListener, KeyListener {
 		{
 			for(int j=0;j<3;j++) 
 			{
-				if (i != 1 || j != 1)
+				faceUnitaire[i][j].setBorder(BorderFactory.createEtchedBorder());
+				
+				if(e.getSource() == faceUnitaire[i][j])
 				{
-					faceUnitaire[i][j].setBorder(BorderFactory.createEtchedBorder());
-					
-					if(e.getSource() == faceUnitaire[i][j])
-					{
-						faceUnitaire[i][j].setBorder(BorderFactory.createMatteBorder(25, 25, 25, 25, Color.black));
-						curI = i;
-						curJ = j;
-					}
+					faceUnitaire[i][j].setBorder(BorderFactory.createMatteBorder(10, 10, 10, 10, Color.black));
+					curI = i;
+					curJ = j;
 				}
 			}
 		}
@@ -641,7 +648,17 @@ public class View extends JFrame implements ActionListener, KeyListener {
         {
             public void run()
             {
-            	new View(800, 800);
+            	// Get dimensions of the screen (current screen if multi-monitor)
+            	GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+            	int width = gd.getDisplayMode().getWidth();
+            	int height = gd.getDisplayMode().getHeight();
+            	
+            	// Make sure it doesn't go out of the screen
+            	if (height < (width/2)+50) 
+            		width = (height-50)*2;
+            	
+            	// Launch the application
+            	new View((int)(width/1.5), (int)(((width/2)+50)/1.5));
             }
         });
 	}

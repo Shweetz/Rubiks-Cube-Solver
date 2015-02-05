@@ -7,11 +7,11 @@ public class Model {
 	
 	public Model() 
 	{
-		InitialisationGrille();
-		//RemplirGrille();
+		InitializeGrid();
+		//FillGrid();
 	}
 	
-	void InitialisationGrille()
+	void InitializeGrid()
 	{
 		for(int i=0;i<3;i++)
 		{
@@ -27,7 +27,7 @@ public class Model {
 		}
 	}
 	
-	void RemplirGrille()
+	void FillGrid()
 	{
 		rubiksCube[0][0][0] = Color.white;
 		rubiksCube[0][0][1] = Color.white;
@@ -91,7 +91,7 @@ public class Model {
 		
 	}
 	
-	void turnRubiksCube(int faceTurnNumber, boolean clockwise)
+	void turnRubiksCube(Color[][][] rubiksCubeToTurn, int faceTurnNumber, boolean clockwise)
 	{
 		int timesTurn = 1;
 		if (clockwise == false)
@@ -99,148 +99,150 @@ public class Model {
 		
 		for (int i = 0; i < timesTurn; ++i)
 		{
-			setFace(faceTurnNumber, turnFace(rubiksCube[faceTurnNumber]));
+			// Update the face that was turned
+			setFace(faceTurnNumber, turnFace(rubiksCubeToTurn[faceTurnNumber]));
 
+			// Update the 4 others impacted faces
 			Color temp1 = null;
 			Color temp2 = null;
 			Color temp3 = null;
 			
 			if (faceTurnNumber == 0)
 			{
-				temp1 = rubiksCube[2][2][0];
-				temp2 = rubiksCube[2][2][1];
-				temp3 = rubiksCube[2][2][2];
+				temp1 = rubiksCubeToTurn[2][2][0];
+				temp2 = rubiksCubeToTurn[2][2][1];
+				temp3 = rubiksCubeToTurn[2][2][2];
 				
-				rubiksCube[2][2][0] = rubiksCube[4][2][2];
-				rubiksCube[2][2][1] = rubiksCube[4][1][2];
-				rubiksCube[2][2][2] = rubiksCube[4][0][2];
+				rubiksCubeToTurn[2][2][0] = rubiksCubeToTurn[4][2][2];
+				rubiksCubeToTurn[2][2][1] = rubiksCubeToTurn[4][1][2];
+				rubiksCubeToTurn[2][2][2] = rubiksCubeToTurn[4][0][2];
 				
-				rubiksCube[4][2][2] = rubiksCube[5][0][2];
-				rubiksCube[4][1][2] = rubiksCube[5][0][1];
-				rubiksCube[4][0][2] = rubiksCube[5][0][0];
+				rubiksCubeToTurn[4][2][2] = rubiksCubeToTurn[5][0][2];
+				rubiksCubeToTurn[4][1][2] = rubiksCubeToTurn[5][0][1];
+				rubiksCubeToTurn[4][0][2] = rubiksCubeToTurn[5][0][0];
 				
-				rubiksCube[5][0][2] = rubiksCube[1][0][0];
-				rubiksCube[5][0][1] = rubiksCube[1][1][0];
-				rubiksCube[5][0][0] = rubiksCube[1][2][0];
+				rubiksCubeToTurn[5][0][2] = rubiksCubeToTurn[1][0][0];
+				rubiksCubeToTurn[5][0][1] = rubiksCubeToTurn[1][1][0];
+				rubiksCubeToTurn[5][0][0] = rubiksCubeToTurn[1][2][0];
 				
-				rubiksCube[1][0][0] = temp1;
-				rubiksCube[1][1][0] = temp2;
-				rubiksCube[1][2][0] = temp3;
+				rubiksCubeToTurn[1][0][0] = temp1;
+				rubiksCubeToTurn[1][1][0] = temp2;
+				rubiksCubeToTurn[1][2][0] = temp3;
 			}
 			
 			else if (faceTurnNumber == 1)
 			{
-				temp1 = rubiksCube[2][2][2];
-				temp2 = rubiksCube[2][1][2];
-				temp3 = rubiksCube[2][0][2];
+				temp1 = rubiksCubeToTurn[2][2][2];
+				temp2 = rubiksCubeToTurn[2][1][2];
+				temp3 = rubiksCubeToTurn[2][0][2];
 				
-				rubiksCube[2][2][2] = rubiksCube[0][2][2];
-				rubiksCube[2][1][2] = rubiksCube[0][1][2];
-				rubiksCube[2][0][2] = rubiksCube[0][0][2];
+				rubiksCubeToTurn[2][2][2] = rubiksCubeToTurn[0][2][2];
+				rubiksCubeToTurn[2][1][2] = rubiksCubeToTurn[0][1][2];
+				rubiksCubeToTurn[2][0][2] = rubiksCubeToTurn[0][0][2];
 				
-				rubiksCube[0][2][2] = rubiksCube[5][2][2];
-				rubiksCube[0][1][2] = rubiksCube[5][1][2];
-				rubiksCube[0][0][2] = rubiksCube[5][0][2];
+				rubiksCubeToTurn[0][2][2] = rubiksCubeToTurn[5][2][2];
+				rubiksCubeToTurn[0][1][2] = rubiksCubeToTurn[5][1][2];
+				rubiksCubeToTurn[0][0][2] = rubiksCubeToTurn[5][0][2];
 				
-				rubiksCube[5][2][2] = rubiksCube[3][0][0];
-				rubiksCube[5][1][2] = rubiksCube[3][1][0];
-				rubiksCube[5][0][2] = rubiksCube[3][2][0];
+				rubiksCubeToTurn[5][2][2] = rubiksCubeToTurn[3][0][0];
+				rubiksCubeToTurn[5][1][2] = rubiksCubeToTurn[3][1][0];
+				rubiksCubeToTurn[5][0][2] = rubiksCubeToTurn[3][2][0];
 				
-				rubiksCube[3][0][0] = temp1;
-				rubiksCube[3][1][0] = temp2;
-				rubiksCube[3][2][0] = temp3;
+				rubiksCubeToTurn[3][0][0] = temp1;
+				rubiksCubeToTurn[3][1][0] = temp2;
+				rubiksCubeToTurn[3][2][0] = temp3;
 			}
 			
 			else if (faceTurnNumber == 2)
 			{
-				temp1 = rubiksCube[3][0][0];
-				temp2 = rubiksCube[3][0][1];
-				temp3 = rubiksCube[3][0][2];
+				temp1 = rubiksCubeToTurn[3][0][0];
+				temp2 = rubiksCubeToTurn[3][0][1];
+				temp3 = rubiksCubeToTurn[3][0][2];
 				
-				rubiksCube[3][0][0] = rubiksCube[4][0][0];
-				rubiksCube[3][0][1] = rubiksCube[4][0][1];
-				rubiksCube[3][0][2] = rubiksCube[4][0][2];
+				rubiksCubeToTurn[3][0][0] = rubiksCubeToTurn[4][0][0];
+				rubiksCubeToTurn[3][0][1] = rubiksCubeToTurn[4][0][1];
+				rubiksCubeToTurn[3][0][2] = rubiksCubeToTurn[4][0][2];
 				
-				rubiksCube[4][0][0] = rubiksCube[0][0][0];
-				rubiksCube[4][0][1] = rubiksCube[0][0][1];
-				rubiksCube[4][0][2] = rubiksCube[0][0][2];
+				rubiksCubeToTurn[4][0][0] = rubiksCubeToTurn[0][0][0];
+				rubiksCubeToTurn[4][0][1] = rubiksCubeToTurn[0][0][1];
+				rubiksCubeToTurn[4][0][2] = rubiksCubeToTurn[0][0][2];
 				
-				rubiksCube[0][0][0] = rubiksCube[1][0][0];
-				rubiksCube[0][0][1] = rubiksCube[1][0][1];
-				rubiksCube[0][0][2] = rubiksCube[1][0][2];
+				rubiksCubeToTurn[0][0][0] = rubiksCubeToTurn[1][0][0];
+				rubiksCubeToTurn[0][0][1] = rubiksCubeToTurn[1][0][1];
+				rubiksCubeToTurn[0][0][2] = rubiksCubeToTurn[1][0][2];
 				
-				rubiksCube[1][0][0] = temp1;
-				rubiksCube[1][0][1] = temp2;
-				rubiksCube[1][0][2] = temp3;
+				rubiksCubeToTurn[1][0][0] = temp1;
+				rubiksCubeToTurn[1][0][1] = temp2;
+				rubiksCubeToTurn[1][0][2] = temp3;
 			}
 			
 			else if (faceTurnNumber == 3)
 			{
-				temp1 = rubiksCube[2][0][2];
-				temp2 = rubiksCube[2][0][1];
-				temp3 = rubiksCube[2][0][0];
+				temp1 = rubiksCubeToTurn[2][0][2];
+				temp2 = rubiksCubeToTurn[2][0][1];
+				temp3 = rubiksCubeToTurn[2][0][0];
 				
-				rubiksCube[2][0][2] = rubiksCube[1][2][2];
-				rubiksCube[2][0][1] = rubiksCube[1][1][2];
-				rubiksCube[2][0][0] = rubiksCube[1][0][2];
+				rubiksCubeToTurn[2][0][2] = rubiksCubeToTurn[1][2][2];
+				rubiksCubeToTurn[2][0][1] = rubiksCubeToTurn[1][1][2];
+				rubiksCubeToTurn[2][0][0] = rubiksCubeToTurn[1][0][2];
 				
-				rubiksCube[1][2][2] = rubiksCube[5][2][0];
-				rubiksCube[1][1][2] = rubiksCube[5][2][1];
-				rubiksCube[1][0][2] = rubiksCube[5][2][2];
+				rubiksCubeToTurn[1][2][2] = rubiksCubeToTurn[5][2][0];
+				rubiksCubeToTurn[1][1][2] = rubiksCubeToTurn[5][2][1];
+				rubiksCubeToTurn[1][0][2] = rubiksCubeToTurn[5][2][2];
 				
-				rubiksCube[5][2][0] = rubiksCube[4][0][0];
-				rubiksCube[5][2][1] = rubiksCube[4][1][0];
-				rubiksCube[5][2][2] = rubiksCube[4][2][0];
+				rubiksCubeToTurn[5][2][0] = rubiksCubeToTurn[4][0][0];
+				rubiksCubeToTurn[5][2][1] = rubiksCubeToTurn[4][1][0];
+				rubiksCubeToTurn[5][2][2] = rubiksCubeToTurn[4][2][0];
 				
-				rubiksCube[4][0][0] = temp1;
-				rubiksCube[4][1][0] = temp2;
-				rubiksCube[4][2][0] = temp3;
+				rubiksCubeToTurn[4][0][0] = temp1;
+				rubiksCubeToTurn[4][1][0] = temp2;
+				rubiksCubeToTurn[4][2][0] = temp3;
 			}
 			
 			else if (faceTurnNumber == 4)
 			{
-				temp1 = rubiksCube[2][0][0];
-				temp2 = rubiksCube[2][1][0];
-				temp3 = rubiksCube[2][2][0];
+				temp1 = rubiksCubeToTurn[2][0][0];
+				temp2 = rubiksCubeToTurn[2][1][0];
+				temp3 = rubiksCubeToTurn[2][2][0];
 				
-				rubiksCube[2][0][0] = rubiksCube[3][2][2];
-				rubiksCube[2][1][0] = rubiksCube[3][1][2];
-				rubiksCube[2][2][0] = rubiksCube[3][0][2];
+				rubiksCubeToTurn[2][0][0] = rubiksCubeToTurn[3][2][2];
+				rubiksCubeToTurn[2][1][0] = rubiksCubeToTurn[3][1][2];
+				rubiksCubeToTurn[2][2][0] = rubiksCubeToTurn[3][0][2];
 				
-				rubiksCube[3][2][2] = rubiksCube[5][0][0];
-				rubiksCube[3][1][2] = rubiksCube[5][1][0];
-				rubiksCube[3][0][2] = rubiksCube[5][2][0];
+				rubiksCubeToTurn[3][2][2] = rubiksCubeToTurn[5][0][0];
+				rubiksCubeToTurn[3][1][2] = rubiksCubeToTurn[5][1][0];
+				rubiksCubeToTurn[3][0][2] = rubiksCubeToTurn[5][2][0];
 				
-				rubiksCube[5][0][0] = rubiksCube[0][0][0];
-				rubiksCube[5][1][0] = rubiksCube[0][1][0];
-				rubiksCube[5][2][0] = rubiksCube[0][2][0];
+				rubiksCubeToTurn[5][0][0] = rubiksCubeToTurn[0][0][0];
+				rubiksCubeToTurn[5][1][0] = rubiksCubeToTurn[0][1][0];
+				rubiksCubeToTurn[5][2][0] = rubiksCubeToTurn[0][2][0];
 				
-				rubiksCube[0][0][0] = temp1;
-				rubiksCube[0][1][0] = temp2;
-				rubiksCube[0][2][0] = temp3;
+				rubiksCubeToTurn[0][0][0] = temp1;
+				rubiksCubeToTurn[0][1][0] = temp2;
+				rubiksCubeToTurn[0][2][0] = temp3;
 			}
 			
 			else if (faceTurnNumber == 5)
 			{
-				temp1 = rubiksCube[3][2][0];
-				temp2 = rubiksCube[3][2][1];
-				temp3 = rubiksCube[3][2][2];
+				temp1 = rubiksCubeToTurn[3][2][0];
+				temp2 = rubiksCubeToTurn[3][2][1];
+				temp3 = rubiksCubeToTurn[3][2][2];
 				
-				rubiksCube[3][2][0] = rubiksCube[1][2][0];
-				rubiksCube[3][2][1] = rubiksCube[1][2][1];
-				rubiksCube[3][2][2] = rubiksCube[1][2][2];
+				rubiksCubeToTurn[3][2][0] = rubiksCubeToTurn[1][2][0];
+				rubiksCubeToTurn[3][2][1] = rubiksCubeToTurn[1][2][1];
+				rubiksCubeToTurn[3][2][2] = rubiksCubeToTurn[1][2][2];
 				
-				rubiksCube[1][2][0] = rubiksCube[0][2][0];
-				rubiksCube[1][2][1] = rubiksCube[0][2][1];
-				rubiksCube[1][2][2] = rubiksCube[0][2][2];
+				rubiksCubeToTurn[1][2][0] = rubiksCubeToTurn[0][2][0];
+				rubiksCubeToTurn[1][2][1] = rubiksCubeToTurn[0][2][1];
+				rubiksCubeToTurn[1][2][2] = rubiksCubeToTurn[0][2][2];
 				
-				rubiksCube[0][2][0] = rubiksCube[4][2][0];
-				rubiksCube[0][2][1] = rubiksCube[4][2][1];
-				rubiksCube[0][2][2] = rubiksCube[4][2][2];
+				rubiksCubeToTurn[0][2][0] = rubiksCubeToTurn[4][2][0];
+				rubiksCubeToTurn[0][2][1] = rubiksCubeToTurn[4][2][1];
+				rubiksCubeToTurn[0][2][2] = rubiksCubeToTurn[4][2][2];
 				
-				rubiksCube[4][2][0] = temp1;
-				rubiksCube[4][2][1] = temp2;
-				rubiksCube[4][2][2] = temp3;
+				rubiksCubeToTurn[4][2][0] = temp1;
+				rubiksCubeToTurn[4][2][1] = temp2;
+				rubiksCubeToTurn[4][2][2] = temp3;
 			}
 		}
 	}
@@ -273,6 +275,19 @@ public class Model {
 			}
 		}
 		return face2;
-	}
+	}	
 	
+	SolveFirstCross solve(String solvingStep) // rubiksCube table doesn't change, just return a table with moves.
+	{				
+		// Do first face with first layer
+		SolveFirstCross answer1 = new SolveFirstCross(rubiksCube);
+		answer1.doFirstCross();
+		
+		if (answer1.isSolvable == false || solvingStep.equals("first face"))
+			return answer1;
+		
+		// Finish the cube
+		
+		return answer1;
+	}	
 }
