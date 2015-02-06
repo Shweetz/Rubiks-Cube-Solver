@@ -1,14 +1,14 @@
 
 public class Solution {
-
-	int[] move;
-	int[] turn;
-	String[] message;
 	
-	public Solution(int size)
+	SubSolution firstCross;
+	SubSolution firstCorners;
+	boolean isSolvable;
+	
+	public Solution()
 	{
-		move = new int[size];
-		turn = new int[size];
-		message = new String[size];
+		firstCross = new SubSolution();
+		firstCorners = new SubSolution();
+		isSolvable = true;
 	}
 }

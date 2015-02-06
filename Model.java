@@ -100,7 +100,7 @@ public class Model {
 		for (int i = 0; i < timesTurn; ++i)
 		{
 			// Update the face that was turned
-			setFace(faceTurnNumber, turnFace(rubiksCubeToTurn[faceTurnNumber]));
+			setFace(rubiksCubeToTurn, faceTurnNumber, turnFace(rubiksCubeToTurn[faceTurnNumber]));
 
 			// Update the 4 others impacted faces
 			Color temp1 = null;
@@ -252,13 +252,13 @@ public class Model {
 		return rubiksCube[faceNumber];
 	}
 	
-	void setFace(int faceNumber, Color[][] face)
+	void setFace(Color[][][] rubiksCubeToTurn, int faceNumber, Color[][] face)
 	{
 		for(int i=0;i<3;i++)
 		{
 			for(int j=0;j<3;j++)
 			{
-				rubiksCube[faceNumber][i][j] = face[i][j];
+				rubiksCubeToTurn[faceNumber][i][j] = face[i][j];
 			}
 		}
 	}
@@ -277,17 +277,30 @@ public class Model {
 		return face2;
 	}	
 	
-	SolveFirstCross solve(String solvingStep) // rubiksCube table doesn't change, just return a table with moves.
+	Solution solve(String solvingStep) // rubiksCube table doesn't change, just return a table with moves.
 	{				
-		// Do first face with first layer
+		Solution solution = new Solution();
+		
 		SolveFirstCross answer1 = new SolveFirstCross(rubiksCube);
 		answer1.doFirstCross();
 		
-		if (answer1.isSolvable == false || solvingStep.equals("first face"))
-			return answer1;
+		if (answer1.isSolvable == false)
+			solution.isSolvable = false;	
+		
+		if (solution.isSolvable = false || solvingStep.equals("first cross"))
+			return solution;
+		
+		SolveFirstCorners answer2 = new SolveFirstCorners(rubiksCube);
+		answer2.doFirstCorners();
+		
+		if (answer2.isSolvable == false)
+			solution.isSolvable = false;
+		
+		if (answer2.isSolvable == false || solvingStep.equals("first face"))
+			return solution;
 		
 		// Finish the cube
 		
-		return answer1;
+		return solution;
 	}	
 }

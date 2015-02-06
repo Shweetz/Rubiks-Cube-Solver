@@ -1,15 +1,16 @@
 import java.awt.Color;
 
 
-public class SolveFirstCross extends Model {
+public class SolveFirstCorners extends Model {
 
-	Color[][][] rubiksCubeFirstCross = new Color[6][3][3];
+	Color[][][] rubiksCubeSolve1 = new Color[6][3][3];
 	int[][][] otherSideOfUnitaryCube = new int[6][3][3];
 	
+	String str_ihm_out = "SolveFirstCross instancie";	
 	boolean isSolvable = true;
 	SubSolution solutionFirstCross;
 			
-	public SolveFirstCross(Color[][][] rubiksCube) 
+	public SolveFirstCorners(Color[][][] rubiksCube) 
 	{
 		InitializeGrid(rubiksCube);
 		InitializeOtherSideTab();
@@ -23,24 +24,24 @@ public class SolveFirstCross extends Model {
 		{
 			for(int j=0;j<3;j++)
 			{
-				rubiksCubeFirstCross[0][i][j] = rubiksCube[5][i][j];				
-				rubiksCubeFirstCross[1][i][j] = rubiksCube[1][i][j];
-				rubiksCubeFirstCross[2][i][j] = rubiksCube[0][i][j];
-				rubiksCubeFirstCross[3][i][j] = rubiksCube[2][i][j];				
-				rubiksCubeFirstCross[4][i][j] = rubiksCube[4][i][j];
-				rubiksCubeFirstCross[5][i][j] = rubiksCube[3][i][j];
+				rubiksCubeSolve1[0][i][j] = rubiksCube[5][i][j];				
+				rubiksCubeSolve1[1][i][j] = rubiksCube[1][i][j];
+				rubiksCubeSolve1[2][i][j] = rubiksCube[0][i][j];
+				rubiksCubeSolve1[3][i][j] = rubiksCube[2][i][j];				
+				rubiksCubeSolve1[4][i][j] = rubiksCube[4][i][j];
+				rubiksCubeSolve1[5][i][j] = rubiksCube[3][i][j];
 			}
 		}
 		
 		// Orient faces
-		rubiksCubeFirstCross[1] = turnFace(rubiksCubeFirstCross[1]);		
-		rubiksCubeFirstCross[3] = turnFace(rubiksCubeFirstCross[3]);
-		rubiksCubeFirstCross[3] = turnFace(rubiksCubeFirstCross[3]);
-		rubiksCubeFirstCross[4] = turnFace(rubiksCubeFirstCross[4]);
-		rubiksCubeFirstCross[4] = turnFace(rubiksCubeFirstCross[4]);
-		rubiksCubeFirstCross[4] = turnFace(rubiksCubeFirstCross[4]);
-		rubiksCubeFirstCross[5] = turnFace(rubiksCubeFirstCross[5]);
-		rubiksCubeFirstCross[5] = turnFace(rubiksCubeFirstCross[5]);		
+		rubiksCubeSolve1[1] = turnFace(rubiksCubeSolve1[1]);		
+		rubiksCubeSolve1[3] = turnFace(rubiksCubeSolve1[3]);
+		rubiksCubeSolve1[3] = turnFace(rubiksCubeSolve1[3]);
+		rubiksCubeSolve1[4] = turnFace(rubiksCubeSolve1[4]);
+		rubiksCubeSolve1[4] = turnFace(rubiksCubeSolve1[4]);
+		rubiksCubeSolve1[4] = turnFace(rubiksCubeSolve1[4]);
+		rubiksCubeSolve1[5] = turnFace(rubiksCubeSolve1[5]);
+		rubiksCubeSolve1[5] = turnFace(rubiksCubeSolve1[5]);		
 	}
 	
 	void InitializeOtherSideTab() // For corners, other side is the next side clockwise
@@ -109,12 +110,12 @@ public class SolveFirstCross extends Model {
 		tab[1] = (int_otherSide/10)%10;
 		tab[2] = int_otherSide%10;
 		
-		return rubiksCubeFirstCross[tab[0]][tab[1]][tab[2]];	
+		return rubiksCubeSolve1[tab[0]][tab[1]][tab[2]];	
 	}
 	
 	boolean checkUnitaryCube(int i, int j, int k, Color c1, Color c2)
 	{
-		if (rubiksCubeFirstCross[i][j][k].equals(c1) && getOtherSideOfUnitaryCube(i,j,k).equals(c2))
+		if (rubiksCubeSolve1[i][j][k].equals(c1) && getOtherSideOfUnitaryCube(i,j,k).equals(c2))
 			return true;
 		
 		return false;
@@ -173,7 +174,7 @@ public class SolveFirstCross extends Model {
 		// Turn the cube to solve it
 		for (int i = 0; i < timesToTurn; i++)
 		{
-			turnRubiksCube(rubiksCubeFirstCross, faceToTurn, true);
+			turnRubiksCube(rubiksCubeSolve1, faceToTurn, true);
 		}
 		
 		// Write down how we turned it
@@ -314,7 +315,7 @@ public class SolveFirstCross extends Model {
 		}
 	}
 	
-	void doFirstCross()
+	void doFirstCorners()
 	{
 		SubSolution solution = new SubSolution(25); // 25 is max number of moves to solve the cross
 		

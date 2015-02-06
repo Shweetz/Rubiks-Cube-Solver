@@ -10,6 +10,7 @@ import java.io.RandomAccessFile;
 public class View extends JFrame implements ActionListener, KeyListener {
 	
 	Model game;
+	SolveFirstCross answer;
 	//Color[][][] rubiksCubeView = new Color[6][3][3];
 	int faceAvant = 0;   // 0 : face avec centre blanc
 	int faceDroite = 1;  // 1 : bleu
@@ -31,6 +32,8 @@ public class View extends JFrame implements ActionListener, KeyListener {
 	int curI = -1;
 	int curJ = -1;
 	int turnTimes;
+	boolean isSolving = false;
+	int moveI = 0;
 	
 	public View(int largeur, int hauteur){ //on cree la fenetre
 		super("Rubik's Cube");
@@ -68,6 +71,7 @@ public class View extends JFrame implements ActionListener, KeyListener {
         ActionListener a2 = new ActionListener(){
             public void actionPerformed(ActionEvent e){
             	chargerFichier("./Rubik's Cube Database");
+            	isSolving = false;
             }
         };
         ajouterItem("Charger", menuFichier, a2, KeyEvent.VK_L);
@@ -199,14 +203,14 @@ public class View extends JFrame implements ActionListener, KeyListener {
         
         ActionListener a20 = new ActionListener(){
             public void actionPerformed(ActionEvent e){
-            	game.solve("full");
+            	showSolution("full");
             }
         };
         ajouterItem("Résoudre complètement", menuResoudre, a20);
         
         ActionListener a21 = new ActionListener(){
             public void actionPerformed(ActionEvent e){
-            	game.solve("first face");
+            	showSolution("first face");
             }
         };
         ajouterItem("Faire une face", menuResoudre, a21);
@@ -246,6 +250,8 @@ public class View extends JFrame implements ActionListener, KeyListener {
     		
     		reporterFichierDansCube(fileChosen); // Charger IHM
     	}	
+    	
+    	isSolving = false;
 	}		
 	
 	private void enregistrerFichier()
@@ -269,6 +275,77 @@ public class View extends JFrame implements ActionListener, KeyListener {
     	if (dialogue.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
     		fileChosen = dialogue.getSelectedFile();
     		reporterCubeDansFichier(fileChosen.toString());
+    	}
+	}
+	
+	private int traductFaceToMove(int faceFromSolution)
+	{
+		/* rubiksCube
+		 * 0: white
+		 * 1: blue
+		 * 2: orange
+		 * 3: yellow
+		 * 4: green
+		 * 5: red
+		 * 
+		 * solutionFirstCross	
+		 * 0: red				
+		 * 1: blue				
+		 * 2: white				
+		 * 3: orange			
+		 * 4: green				
+		 * 5: yellow			
+		*/
+		if (faceFromSolution == 0)	return 5;
+		if (faceFromSolution == 1)	return 1;
+		if (faceFromSolution == 2)	return 0;
+		if (faceFromSolution == 3)	return 2;
+		if (faceFromSolution == 4)	return 4;
+		if (faceFromSolution == 5)	return 3;
+		
+		return -1;
+	}
+	
+	private void showMove(int moveI)
+	{
+		int faceToTurn = traductFaceToMove(answer.solutionFirstCross.move[moveI]);
+		
+		if (answer.solutionFirstCross.turn[moveI] == 1)
+		{
+            	game.turnRubiksCube(game.rubiksCube, faceToTurn, true);
+            	actualiserFaceAvant();
+		}
+		else if (answer.solutionFirstCross.turn[moveI] == 2)
+		{
+            	game.turnRubiksCube(game.rubiksCube, faceToTurn, true);
+            	game.turnRubiksCube(game.rubiksCube, faceToTurn, true);
+            	actualiserFaceAvant();
+		}
+		else if (answer.solutionFirstCross.turn[moveI] == 3)
+		{
+            	game.turnRubiksCube(game.rubiksCube, faceToTurn, false);
+            	actualiserFaceAvant();
+		}
+		else 
+		{
+			moveI--;
+		}
+		
+		ihmMessage.setText(Integer.toString(moveI) + "\n\n" + answer.solutionFirstCross.message[moveI]);
+	}
+	
+	private void showSolution(String solveStep)
+	{
+		isSolving = true;
+		
+    	//answer = 
+		game.solve(solveStep);
+    	if (answer.isSolvable == true)
+    	{
+	    	if (solveStep.equals("first face"));
+	    	{
+	    		showMove(moveI = 0);
+	    	}
     	}
 	}
 	
@@ -591,7 +668,6 @@ public class View extends JFrame implements ActionListener, KeyListener {
 			
 			nextCell();		
 		}
-
 		if (evt.getKeyCode() == KeyEvent.VK_B) // Si une case est sélectionnée, elle devient blue 
 		{			
 			if (curI >= 0 && curI <= 2 && curJ >= 0 && curJ <= 2 && (curI != 1 || curJ != 1))
@@ -599,7 +675,6 @@ public class View extends JFrame implements ActionListener, KeyListener {
 			
 			nextCell();		
 		}
-
 		if (evt.getKeyCode() == KeyEvent.VK_O) // Si une case est sélectionnée, elle devient orange 
 		{			
 			if (curI >= 0 && curI <= 2 && curJ >= 0 && curJ <= 2 && (curI != 1 || curJ != 1))
@@ -607,7 +682,6 @@ public class View extends JFrame implements ActionListener, KeyListener {
 			
 			nextCell();		
 		}
-
 		if (evt.getKeyCode() == KeyEvent.VK_Y) // Si une case est sélectionnée, elle devient jaune 
 		{			
 			if (curI >= 0 && curI <= 2 && curJ >= 0 && curJ <= 2 && (curI != 1 || curJ != 1))
@@ -615,7 +689,6 @@ public class View extends JFrame implements ActionListener, KeyListener {
 			
 			nextCell();		
 		}
-
 		if (evt.getKeyCode() == KeyEvent.VK_G) // Si une case est sélectionnée, elle devient verte 
 		{			
 			if (curI >= 0 && curI <= 2 && curJ >= 0 && curJ <= 2 && (curI != 1 || curJ != 1))
@@ -623,7 +696,6 @@ public class View extends JFrame implements ActionListener, KeyListener {
 			
 			nextCell();		
 		}
-
 		if (evt.getKeyCode() == KeyEvent.VK_R) // Si une case est sélectionnée, elle devient rouge 
 		{			
 			if (curI >= 0 && curI <= 2 && curJ >= 0 && curJ <= 2 && (curI != 1 || curJ != 1))
@@ -631,7 +703,24 @@ public class View extends JFrame implements ActionListener, KeyListener {
 			
 			nextCell();		
 		}
-
+		
+		if (evt.getKeyCode() == KeyEvent.VK_ENTER) 
+		{
+			if (isSolving)
+				showMove(++moveI);
+		}
+		if (evt.getKeyCode() == KeyEvent.VK_ASTERISK) 
+		{
+			if (isSolving && moveI >= 0)
+			{
+				// Do 3 times more the move we did to undo it... not optimized but the clearest way to do it
+				showMove(moveI);
+				showMove(moveI);
+				showMove(moveI);
+				
+				moveI--;
+			}
+		}
 	}
 	
 	public void keyReleased(KeyEvent evt) { // nécessaire pour compiler
