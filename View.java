@@ -10,7 +10,7 @@ import java.io.RandomAccessFile;
 public class View extends JFrame implements ActionListener, KeyListener {
 	
 	Model game;
-	SolveFirstCross answer;
+	Solution solution;
 	//Color[][][] rubiksCubeView = new Color[6][3][3];
 	int faceAvant = 0;   // 0 : face avec centre blanc
 	int faceDroite = 1;  // 1 : bleu
@@ -249,6 +249,8 @@ public class View extends JFrame implements ActionListener, KeyListener {
     		fileChosen = dialogue.getSelectedFile();
     		
     		reporterFichierDansCube(fileChosen); // Charger IHM
+
+			ihmMessage.setText("Fichier " + fileChosen.getName() + " chargé !");
     	}	
     	
     	isSolving = false;
@@ -259,6 +261,7 @@ public class View extends JFrame implements ActionListener, KeyListener {
 		if (fileChosen != null)
 		{
 			reporterCubeDansFichier(fileChosen.toString());
+			ihmMessage.setText("Fichier " + fileChosen.getName() + " sauvegardé !");
 		}
 		else
 			enregistrerSousFichier();
@@ -275,6 +278,7 @@ public class View extends JFrame implements ActionListener, KeyListener {
     	if (dialogue.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
     		fileChosen = dialogue.getSelectedFile();
     		reporterCubeDansFichier(fileChosen.toString());
+			ihmMessage.setText("Fichier " + fileChosen.getName() + " sauvegardé !");
     	}
 	}
 	
@@ -288,7 +292,7 @@ public class View extends JFrame implements ActionListener, KeyListener {
 		 * 4: green
 		 * 5: red
 		 * 
-		 * solutionFirstCross	
+		 * rubiksCubeFirstCross	
 		 * 0: red				
 		 * 1: blue				
 		 * 2: white				
@@ -308,53 +312,58 @@ public class View extends JFrame implements ActionListener, KeyListener {
 	
 	private void showMove(int moveI)
 	{
-		int faceToTurn = traductFaceToMove(answer.solutionFirstCross.move[moveI]);
+		int faceToTurn = traductFaceToMove(solution.firstCross.move[moveI]);
 		
-		if (answer.solutionFirstCross.turn[moveI] == 1)
+		if (solution.firstCross.turn[moveI] == 1)
 		{
             	game.turnRubiksCube(game.rubiksCube, faceToTurn, true);
             	actualiserFaceAvant();
 		}
-		else if (answer.solutionFirstCross.turn[moveI] == 2)
+		else if (solution.firstCross.turn[moveI] == 2)
 		{
             	game.turnRubiksCube(game.rubiksCube, faceToTurn, true);
             	game.turnRubiksCube(game.rubiksCube, faceToTurn, true);
             	actualiserFaceAvant();
 		}
-		else if (answer.solutionFirstCross.turn[moveI] == 3)
+		else if (solution.firstCross.turn[moveI] == 3)
 		{
             	game.turnRubiksCube(game.rubiksCube, faceToTurn, false);
             	actualiserFaceAvant();
 		}
-		else 
-		{
-			moveI--;
-		}
 		
-		ihmMessage.setText(Integer.toString(moveI) + "\n\n" + answer.solutionFirstCross.message[moveI]);
+		if (solution.firstCross.turn[moveI] != 0)
+			ihmMessage.setText(Integer.toString(moveI) + "\n\n" + solution.firstCross.message[moveI] + "\n\n"
+							+ "Appuyer sur enter pour voir le move suivant, étoile (*) pour le précédent.");
 	}
 	
 	private void showSolution(String solveStep)
 	{
 		isSolving = true;
 		
-    	//answer = 
-		game.solve(solveStep);
-    	if (answer.isSolvable == true)
+    	solution = game.solve(solveStep);
+    	if (solution.isSolvable == true)
     	{
-	    	if (solveStep.equals("first face"));
-	    	{
+	    	//if (solveStep.equals("first face"));
+	    	//{
 	    		showMove(moveI = 0);
-	    	}
+	    	//}
+    	}
+    	else
+    	{
+    		ihmMessage.setText("Rubik's cube non résolvable, vérifiez les couleurs entrées.\n\n"
+    				+ "Si elles sont justes, vous devez ouvrir le Rubik's cube et replacer les cubes "
+    				+ "correctement à la main.\n\n"
+    				+ "Attention, si votre Rubik's cube possède 2 petits cubes identiques ou 1 petit cube avec "
+    				+ "la même couleur sur 2 de ses faces, 2 options :\n"
+    				+ "- Ouvrir le Rubik's cube (conseillé, mais vous devrez décoller et recoller quelques étiquettes)\n"
+    				+ "- Décoller et recoller un grand nombre d'étiquettes (déconseillé, cela va plus abimer le cube "
+    				+ "et prendre plus longtemps).");
     	}
 	}
 	
 	private void creerInterface()
 	{
 		Container c = getContentPane();
-		
-		game = new Model();
-		Color[][] face = game.getFace(0);
 		
 		// On crée l'IHM
 		panelGeneral = new JPanel();
@@ -387,7 +396,10 @@ public class View extends JFrame implements ActionListener, KeyListener {
 		
 		// On crée la zone message
 		ihmMessage = new JTextArea();
-		ihmMessage.setText("Coucou debug (et TF1)\n"
+		ihmMessage.setText("Utiliser les flèches pour visualiser une face différente.\n\n"
+						 + "Cliquer sur une vignette puis "
+						 + "sur la touche corresponte pour changer sa couleur (notations anglaises pour "
+						 + "différencier blanc et bleu donc W pour White, B pour Blue, Orange, Yellow, Green, Red)\n"
 						 + "\n"
 						 + "Il n'est pas possible de modifier le centre des faces, il faut changer les couleurs autour.");		
 		ihmMessage.setFont(new java.awt.Font("Helvetica", java.awt.Font.PLAIN, 18));
@@ -398,7 +410,10 @@ public class View extends JFrame implements ActionListener, KeyListener {
 		JScrollPane scrollPane = new JScrollPane(ihmMessage);
 		panelMessage.add(scrollPane);
 				
-		// On crée la face de devant
+		// On crée le cube (face de devant)
+		game = new Model();
+		Color[][] face = game.getFace(0);
+		
 		faceUnitaire = new JButton[3][3];
 		for(int i=0;i<3;i++)
 		{

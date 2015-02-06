@@ -5,10 +5,6 @@ public class SubSolution {
 	int[] turn;
 	String[] message;
 	
-	public SubSolution()
-	{		
-	}
-	
 	public SubSolution(int size)
 	{
 		move = new int[size];

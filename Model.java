@@ -5,30 +5,15 @@ public class Model {
 
 	Color[][][] rubiksCube = new Color[6][3][3];
 	int[][][] otherSideOfUnitaryCube = new int[6][3][3];
+	Solution solution = new Solution();
 	
 	public Model() 
 	{
 		InitializeGrid();
-		//FillGrid();
+		//FillGrid(); 
 	}
 	
-	void InitializeGrid()
-	{
-		for(int i=0;i<3;i++)
-		{
-			for(int j=0;j<3;j++)
-			{
-				rubiksCube[0][i][j] = Color.white;
-				rubiksCube[1][i][j] = Color.blue;
-				rubiksCube[2][i][j] = Color.orange;
-				rubiksCube[3][i][j] = Color.yellow;
-				rubiksCube[4][i][j] = Color.green;
-				rubiksCube[5][i][j] = Color.red;
-			}
-		}
-	}
-	
-	void FillGrid()
+	/*void FillGrid() // if debug needed
 	{
 		rubiksCube[0][0][0] = Color.white;
 		rubiksCube[0][0][1] = Color.white;
@@ -89,6 +74,22 @@ public class Model {
 		rubiksCube[5][2][0] = Color.yellow;
 		rubiksCube[5][2][1] = Color.red;
 		rubiksCube[5][2][2] = Color.white;
+	}*/
+	
+	void InitializeGrid()
+	{
+		for(int i=0;i<3;i++)
+		{
+			for(int j=0;j<3;j++)
+			{
+				rubiksCube[0][i][j] = Color.white;
+				rubiksCube[1][i][j] = Color.blue;
+				rubiksCube[2][i][j] = Color.orange;
+				rubiksCube[3][i][j] = Color.yellow;
+				rubiksCube[4][i][j] = Color.green;
+				rubiksCube[5][i][j] = Color.red;
+			}
+		}
 	}
 	
 	void InitializeOtherSideTab() // For corners, other side is the next side clockwise
@@ -170,7 +171,7 @@ public class Model {
 	
 	int[] findUnitaryEdge(Color[][][] rubiksCubeToCheck, Color c1, Color c2)
 	{
-		int edgePos[] = new int[3];
+		int edgePos[] = {-1,-1,-1}; 
 		
 		for (int i = 0; i < 6; ++i)
 		{
@@ -189,7 +190,9 @@ public class Model {
 				}
 			}
 		}
-		return edgePos;
+		// if we get here, {-1,-1,-1} is returned and the edge wasn't found in the cube (unsolvable cube)
+		solution.isSolvable = false;
+		return edgePos; 
 	}
 	
 	int[] findUnitaryCorner(Color[][][] rubiksCubeToCheck, Color c1, Color c2) // Give c2 clockwise to c1
@@ -430,25 +433,18 @@ public class Model {
 	
 	Solution solve(String solvingStep) // rubiksCube table doesn't change, just return a table with moves.
 	{				
-		Solution solution = new Solution();
 		
 		SolveFirstCross answer1 = new SolveFirstCross(rubiksCube);
-		answer1.doFirstCross();
+		solution.firstCross = answer1.doFirstCross();
 		
-		if (answer1.isSolvable == false)
-			solution.isSolvable = false;	
-		
-		if (solution.isSolvable = false || solvingStep.equals("first cross"))
+		if (solution.isSolvable == false || solvingStep.equals("first cross"))
 			return solution;
 		
-		SolveFirstCorners answer2 = new SolveFirstCorners(answer1.rubiksCubeFirstCross);
+		/*SolveFirstCorners answer2 = new SolveFirstCorners(answer1.rubiksCubeFirstCross);
 		answer2.doFirstCorners();
 		
-		if (answer2.isSolvable == false)
-			solution.isSolvable = false;
-		
 		if (answer2.isSolvable == false || solvingStep.equals("first face"))
-			return solution;
+			return solution;*/
 		
 		return solution;
 	}	

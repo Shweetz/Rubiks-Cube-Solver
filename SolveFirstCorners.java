@@ -4,10 +4,6 @@ import java.awt.Color;
 public class SolveFirstCorners extends Model {
 
 	Color[][][] rubiksCubeFirstCorners = new Color[6][3][3];
-	int[][][] otherSideOfUnitaryCube = new int[6][3][3];
-	
-	boolean isSolvable = true;
-	SubSolution solutionFirstCross;
 			
 	public SolveFirstCorners(Color[][][] rubiksCubeFirstCross) 
 	{
@@ -164,23 +160,23 @@ public class SolveFirstCorners extends Model {
 		}
 	}
 	
-	void doFirstCorners()
+	SubSolution doFirstCorners()
 	{
-		SubSolution solution = new SubSolution(25); // 25 is max number of moves to solve the cross
+		SubSolution firstCorners = new SubSolution(25); // 25 is max number of moves to solve the cross
 		
-		doOneEdge(Color.white, Color.green, solution);
-		doOneEdge(Color.white, Color.orange, solution);
-		doOneEdge(Color.white, Color.blue, solution);
-		doOneEdge(Color.white, Color.red, solution);
+		doOneEdge(Color.white, Color.green, firstCorners);
+		doOneEdge(Color.white, Color.orange, firstCorners);
+		doOneEdge(Color.white, Color.blue, firstCorners);
+		doOneEdge(Color.white, Color.red, firstCorners);
 
 		String message = "On tourne la face blanche pour placer les bords avec leur centre.";
 		int[] edgePos = findUnitaryEdge(rubiksCubeFirstCorners, Color.white, Color.red);
 		while (edgePos[1] != 2)
 		{
-			fillAnswerTab(rubiksCubeFirstCorners, solution.move, 2, solution.turn, 1, solution.message, message);
+			fillAnswerTab(rubiksCubeFirstCorners, firstCorners.move, 2, firstCorners.turn, 1, firstCorners.message, message);
 			edgePos = findUnitaryEdge(rubiksCubeFirstCorners, Color.white, Color.red);
 		}
 		
-		solutionFirstCross = solution;
+		return firstCorners;
 	}
 }
