@@ -4,6 +4,7 @@ import java.awt.*;
 public class Model {
 
 	Color[][][] rubiksCube = new Color[6][3][3];
+	int[][][] otherSideOfUnitaryCube = new int[6][3][3];
 	
 	public Model() 
 	{
@@ -88,7 +89,157 @@ public class Model {
 		rubiksCube[5][2][0] = Color.yellow;
 		rubiksCube[5][2][1] = Color.red;
 		rubiksCube[5][2][2] = Color.white;
+	}
+	
+	void InitializeOtherSideTab() // For corners, other side is the next side clockwise
+	{
+		otherSideOfUnitaryCube[0][0][0] = 402; // 402 means [4][0][2]
+		otherSideOfUnitaryCube[0][0][1] = 221;
+		otherSideOfUnitaryCube[0][0][2] = 222;
+		otherSideOfUnitaryCube[0][1][0] = 412;
+		otherSideOfUnitaryCube[0][1][2] = 110;
+		otherSideOfUnitaryCube[0][2][0] = 500;
+		otherSideOfUnitaryCube[0][2][1] = 501;
+		otherSideOfUnitaryCube[0][2][2] = 120;
+
+		otherSideOfUnitaryCube[1][0][0] = 2;   // 002
+		otherSideOfUnitaryCube[1][0][1] = 212;
+		otherSideOfUnitaryCube[1][0][2] = 202;
+		otherSideOfUnitaryCube[1][1][0] = 12;  // 012
+		otherSideOfUnitaryCube[1][1][2] = 310;
+		otherSideOfUnitaryCube[1][2][0] = 502;
+		otherSideOfUnitaryCube[1][2][1] = 512;
+		otherSideOfUnitaryCube[1][2][2] = 320;
 		
+		otherSideOfUnitaryCube[2][0][0] = 400; 
+		otherSideOfUnitaryCube[2][0][1] = 301;
+		otherSideOfUnitaryCube[2][0][2] = 300;
+		otherSideOfUnitaryCube[2][1][0] = 401;
+		otherSideOfUnitaryCube[2][1][2] = 101;
+		otherSideOfUnitaryCube[2][2][0] = 0;   // 000
+		otherSideOfUnitaryCube[2][2][1] = 1;   // 001
+		otherSideOfUnitaryCube[2][2][2] = 100;
+		
+		otherSideOfUnitaryCube[3][0][0] = 102; 
+		otherSideOfUnitaryCube[3][0][1] = 201;
+		otherSideOfUnitaryCube[3][0][2] = 200;
+		otherSideOfUnitaryCube[3][1][0] = 112;
+		otherSideOfUnitaryCube[3][1][2] = 410;
+		otherSideOfUnitaryCube[3][2][0] = 522;
+		otherSideOfUnitaryCube[3][2][1] = 521;
+		otherSideOfUnitaryCube[3][2][2] = 420;
+		
+		otherSideOfUnitaryCube[4][0][0] = 302; 
+		otherSideOfUnitaryCube[4][0][1] = 210;
+		otherSideOfUnitaryCube[4][0][2] = 220;
+		otherSideOfUnitaryCube[4][1][0] = 312;
+		otherSideOfUnitaryCube[4][1][2] = 10;  // 010
+		otherSideOfUnitaryCube[4][2][0] = 520;
+		otherSideOfUnitaryCube[4][2][1] = 510;
+		otherSideOfUnitaryCube[4][2][2] = 20;  // 020
+		
+		otherSideOfUnitaryCube[5][0][0] = 422; 
+		otherSideOfUnitaryCube[5][0][1] = 21;  // 021
+		otherSideOfUnitaryCube[5][0][2] = 22;  // 022
+		otherSideOfUnitaryCube[5][1][0] = 421;
+		otherSideOfUnitaryCube[5][1][2] = 121;
+		otherSideOfUnitaryCube[5][2][0] = 322;
+		otherSideOfUnitaryCube[5][2][1] = 321;
+		otherSideOfUnitaryCube[5][2][2] = 122;
+	}
+	
+	Color getOtherSideOfUnitaryCube(Color[][][] rubiksCubeToCheck, int i, int j, int k)
+	{
+		int int_otherSide = otherSideOfUnitaryCube[i][j][k];
+		
+		int tab[] = new int[3];
+		tab[0] = int_otherSide/100;
+		tab[1] = (int_otherSide/10)%10;
+		tab[2] = int_otherSide%10;
+		
+		return rubiksCubeToCheck[tab[0]][tab[1]][tab[2]];	
+	}
+	
+	boolean checkUnitaryCube(Color[][][] rubiksCubeToCheck, int i, int j, int k, Color c1, Color c2)
+	{
+		if (rubiksCubeToCheck[i][j][k].equals(c1) && getOtherSideOfUnitaryCube(rubiksCubeToCheck,i,j,k).equals(c2))
+			return true;
+		
+		return false;
+	}
+	
+	int[] findUnitaryEdge(Color[][][] rubiksCubeToCheck, Color c1, Color c2)
+	{
+		int edgePos[] = new int[3];
+		
+		for (int i = 0; i < 6; ++i)
+		{
+			for (int j = 0; j < 3; ++j)
+			{
+				for (int k = 0; k < 3; ++k)
+				{
+					// Find the good edge
+					if ((j+k)%2 == 1 && checkUnitaryCube(rubiksCubeToCheck, i, j, k, c1, c2))
+					{
+						edgePos[0] = i;
+						edgePos[1] = j;
+						edgePos[2] = k;
+						return edgePos;
+					}						
+				}
+			}
+		}
+		return edgePos;
+	}
+	
+	int[] findUnitaryCorner(Color[][][] rubiksCubeToCheck, Color c1, Color c2) // Give c2 clockwise to c1
+	{		
+		int cornerPos[] = new int[3];
+		
+		for (int i = 0; i < 6; ++i)
+		{
+			for (int j = 0; j < 3; ++j)
+			{
+				for (int k = 0; k < 3; ++k)
+				{
+					// Find the good corner
+					if ((j+k)%2 == 0 && checkUnitaryCube(rubiksCubeToCheck, i, j, k, c1, c2))
+					{
+						cornerPos[0] = i;
+						cornerPos[1] = j;
+						cornerPos[2] = k;
+						return cornerPos;
+					}						
+				}
+			}
+		}
+		return cornerPos;
+	}
+	
+	void fillAnswerTab(Color[][][] rubiksCubeToCheck, int[] move, int faceToTurn, int[] turn, int timesToTurn, 
+					   String[] solMessage, String message)
+	{
+		// Turn the cube to solve it
+		for (int i = 0; i < timesToTurn; i++)
+		{
+			turnRubiksCube(rubiksCubeToCheck, faceToTurn, true);
+		}
+		
+		// Write down how we turned it
+		int j = 0;
+		while (turn[j] != 0) // Find where is the next free space in tabs
+			j++;
+		
+		if (j != 0 && move[j-1] == faceToTurn) // Don't use another space if last face turned is turned again
+			j = j-1;
+		
+		if (timesToTurn%4 != 0) // Add values
+		{
+			move[j] = faceToTurn;
+			turn[j] += timesToTurn;
+			turn[j] = turn[j]%4;	
+			solMessage[j] = message;
+		}
 	}
 	
 	void turnRubiksCube(Color[][][] rubiksCubeToTurn, int faceTurnNumber, boolean clockwise)
@@ -290,7 +441,7 @@ public class Model {
 		if (solution.isSolvable = false || solvingStep.equals("first cross"))
 			return solution;
 		
-		SolveFirstCorners answer2 = new SolveFirstCorners(rubiksCube);
+		SolveFirstCorners answer2 = new SolveFirstCorners(answer1.rubiksCubeFirstCross);
 		answer2.doFirstCorners();
 		
 		if (answer2.isSolvable == false)
@@ -298,8 +449,6 @@ public class Model {
 		
 		if (answer2.isSolvable == false || solvingStep.equals("first face"))
 			return solution;
-		
-		// Finish the cube
 		
 		return solution;
 	}	
