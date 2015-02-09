@@ -5,7 +5,7 @@ public class Model {
 
 	Color[][][] rubiksCube = new Color[6][3][3];
 	int[][][] otherSideOfUnitaryCube = new int[6][3][3];
-	Solution solution = new Solution();
+	Solution solution = new Solution(500);
 	
 	public Model() 
 	{
@@ -219,8 +219,7 @@ public class Model {
 		return cornerPos;
 	}
 	
-	void fillAnswerTab(Color[][][] rubiksCubeToCheck, int[] move, int faceToTurn, int[] turn, int timesToTurn, 
-					   String[] solMessage, String message)
+	void fillAnswerTab(Color[][][] rubiksCubeToCheck, int faceToTurn, int timesToTurn, String messageToShow, String solveStep)
 	{
 		// Turn the cube to solve it
 		for (int i = 0; i < timesToTurn; i++)
@@ -230,18 +229,19 @@ public class Model {
 		
 		// Write down how we turned it
 		int j = 0;
-		while (turn[j] != 0) // Find where is the next free space in tabs
+		while (solution.turn[j] != 0) // Find where is the next free space in tabs
 			j++;
 		
-		if (j != 0 && move[j-1] == faceToTurn) // Don't use another space if last face turned is turned again
+		if (j != 0 && solution.move[j-1] == faceToTurn) // Don't use another space if last face turned is turned again
 			j = j-1;
 		
 		if (timesToTurn%4 != 0) // Add values
 		{
-			move[j] = faceToTurn;
-			turn[j] += timesToTurn;
-			turn[j] = turn[j]%4;	
-			solMessage[j] = message;
+			solution.move[j] = faceToTurn;
+			solution.turn[j] += timesToTurn;
+			solution.turn[j] = solution.turn[j]%4;	
+			solution.message[j] = messageToShow;
+			solution.step[j] = solveStep;
 		}
 	}
 	
@@ -435,7 +435,7 @@ public class Model {
 	{				
 		
 		SolveFirstCross answer1 = new SolveFirstCross(rubiksCube);
-		solution.firstCross = answer1.doFirstCross();
+		solution = answer1.doFirstCross();
 		
 		if (solution.isSolvable == false || solvingStep.equals("first cross"))
 			return solution;

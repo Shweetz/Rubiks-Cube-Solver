@@ -1,14 +1,20 @@
 
 public class Solution {
-	
-	SubSolution firstCross;
-	SubSolution firstCorners;
+
+	int[] move;
+	int[] turn;
+	String[] message;
+	String[] step;
 	boolean isSolvable;
 	
-	public Solution()
+	// firstCross : 25 moves max
+	
+	public Solution(int size)
 	{
-		firstCross = new SubSolution(25);
-		firstCorners = new SubSolution(25);
+		move = new int[size];
+		turn = new int[size];
+		message = new String[size];
+		step = new String[size];
 		isSolvable = true;
 	}
 }

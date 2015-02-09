@@ -312,28 +312,33 @@ public class View extends JFrame implements ActionListener, KeyListener {
 	
 	private void showMove(int moveI)
 	{
-		int faceToTurn = traductFaceToMove(solution.firstCross.move[moveI]);
+		int faceToTurn = traductFaceToMove(solution.move[moveI]);
 		
-		if (solution.firstCross.turn[moveI] == 1)
+		if (solution.turn[moveI] == 1)
 		{
             	game.turnRubiksCube(game.rubiksCube, faceToTurn, true);
             	actualiserFaceAvant();
 		}
-		else if (solution.firstCross.turn[moveI] == 2)
+		else if (solution.turn[moveI] == 2)
 		{
             	game.turnRubiksCube(game.rubiksCube, faceToTurn, true);
             	game.turnRubiksCube(game.rubiksCube, faceToTurn, true);
             	actualiserFaceAvant();
 		}
-		else if (solution.firstCross.turn[moveI] == 3)
+		else if (solution.turn[moveI] == 3)
 		{
             	game.turnRubiksCube(game.rubiksCube, faceToTurn, false);
             	actualiserFaceAvant();
 		}
 		
-		if (solution.firstCross.turn[moveI] != 0)
-			ihmMessage.setText(Integer.toString(moveI) + "\n\n" + solution.firstCross.message[moveI] + "\n\n"
+		if (solution.turn[moveI] != 0)
+			ihmMessage.setText(Integer.toString(moveI) + "\n\n" + solution.message[moveI] + "\n\n"
 							+ "Appuyer sur enter pour voir le move suivant, étoile (*) pour le précédent.");
+		
+		if (solution.step[moveI] == "first cross")
+			ihmEtape.setText("first cross");
+		else if (solution.step[moveI] == "first corners")
+			ihmEtape.setText("first corners");
 	}
 	
 	private void showSolution(String solveStep)

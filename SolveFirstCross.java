@@ -1,5 +1,5 @@
-import java.awt.Color;
 
+import java.awt.Color;
 
 public class SolveFirstCross extends Model {
 
@@ -39,7 +39,7 @@ public class SolveFirstCross extends Model {
 		rubiksCubeFirstCross[5] = turnFace(rubiksCubeFirstCross[5]);		
 	}
 	
-	void doOneEdge(Color c1, Color c2, SubSolution firstCross)
+	void doOneEdge(Color c1, Color c2)
 	{
 		String message = "";
 		String bord = "blanc-";
@@ -60,7 +60,7 @@ public class SolveFirstCross extends Model {
 		{
 			message = "Le bord " + bord + "est bien positionné, mettons-le à droite "
 					+ "pour placer le prochain en bas de la face blanche";
-			fillAnswerTab(rubiksCubeFirstCross, firstCross.move, 2, firstCross.turn, 3, firstCross.message, message); // fully placed
+			fillAnswerTab(rubiksCubeFirstCross, 2, 3, message, "first cross"); // fully placed
 		}
 		else if (edgePos[0] == 2)
 		{
@@ -70,17 +70,17 @@ public class SolveFirstCross extends Model {
 					+ "au prochain bord.";
 			if (edgePos[1] == 1) // he's left of white face
 			{
-				fillAnswerTab(rubiksCubeFirstCross, firstCross.move, 4, firstCross.turn, 2, firstCross.message, message); // put on opposite face
-				fillAnswerTab(rubiksCubeFirstCross, firstCross.move, 5, firstCross.turn, 1, firstCross.message, message); // move opposite face
-				fillAnswerTab(rubiksCubeFirstCross, firstCross.move, 0, firstCross.turn, 2, firstCross.message, message); // placed (2, 1, 2)
-				fillAnswerTab(rubiksCubeFirstCross, firstCross.move, 2, firstCross.turn, 3, firstCross.message, message); // fully placed (2, 2, 1)
+				fillAnswerTab(rubiksCubeFirstCross, 4, 2, message, "first cross"); // put on opposite face
+				fillAnswerTab(rubiksCubeFirstCross, 5, 1, message, "first cross"); // move opposite face
+				fillAnswerTab(rubiksCubeFirstCross, 0, 2, message, "first cross"); // placed (2, 1, 2)
+				fillAnswerTab(rubiksCubeFirstCross, 2, 3, message, "first cross"); // fully placed (2, 2, 1)
 			}
 			else if (edgePos[1] == 0) // he's top of white face
 			{
-				fillAnswerTab(rubiksCubeFirstCross, firstCross.move, 3, firstCross.turn, 2, firstCross.message, message); // put on opposite face
-				fillAnswerTab(rubiksCubeFirstCross, firstCross.move, 5, firstCross.turn, 2, firstCross.message, message); // move opposite face
-				fillAnswerTab(rubiksCubeFirstCross, firstCross.move, 0, firstCross.turn, 2, firstCross.message, message); // placed
-				fillAnswerTab(rubiksCubeFirstCross, firstCross.move, 2, firstCross.turn, 3, firstCross.message, message); // fully placed
+				fillAnswerTab(rubiksCubeFirstCross, 3, 2, message, "first cross"); // put on opposite face
+				fillAnswerTab(rubiksCubeFirstCross, 5, 2, message, "first cross"); // move opposite face
+				fillAnswerTab(rubiksCubeFirstCross, 0, 2, message, "first cross"); // placed
+				fillAnswerTab(rubiksCubeFirstCross, 2, 3, message, "first cross"); // fully placed
 			}
 		}
 		// If the white part of the edge we want is on the yellow face
@@ -91,11 +91,11 @@ public class SolveFirstCross extends Model {
 					+ "laisser la place au prochain bord.";
 			while (edgePos[1] != 0)
 			{
-				fillAnswerTab(rubiksCubeFirstCross, firstCross.move, 5, firstCross.turn, 1, firstCross.message, message); // move opposite face
+				fillAnswerTab(rubiksCubeFirstCross, 5, 1, message, "first cross"); // move opposite face
 				edgePos = findUnitaryEdge(rubiksCubeFirstCross, c1, c2);
 			}
-			fillAnswerTab(rubiksCubeFirstCross, firstCross.move, 0, firstCross.turn, 2, firstCross.message, message); // placed
-			fillAnswerTab(rubiksCubeFirstCross, firstCross.move, 2, firstCross.turn, 3, firstCross.message, message); // fully placed
+			fillAnswerTab(rubiksCubeFirstCross, 0, 2, message, "first cross"); // placed
+			fillAnswerTab(rubiksCubeFirstCross, 2, 3, message, "first cross"); // fully placed
 		}
 		// If the white part of the edge we want is on other faces
 		else
@@ -118,7 +118,7 @@ public class SolveFirstCross extends Model {
 						+ "et finalement placer le bord. Ensuite on le met à droite pour laisser la place "
 						+ "au prochain bord.";
 				
-				fillAnswerTab(rubiksCubeFirstCross, firstCross.move, edgePos[0], firstCross.turn, 1, firstCross.message, message); 				
+				fillAnswerTab(rubiksCubeFirstCross, edgePos[0], 1, message, "first cross"); 				
 				edgePos = findUnitaryEdge(rubiksCubeFirstCross, c1, c2);
 			}
 			
@@ -130,36 +130,36 @@ public class SolveFirstCross extends Model {
 			else if (faceOfOtherSideOfEdge==3) timesToTurn = 2;
 			else if (faceOfOtherSideOfEdge==4) timesToTurn = 1;
 				
-			fillAnswerTab(rubiksCubeFirstCross, firstCross.move, 2, firstCross.turn, timesToTurn, firstCross.message, message); // move top face				
+			fillAnswerTab(rubiksCubeFirstCross, 2, timesToTurn, message, "first cross"); // move top face				
 			edgePos = findUnitaryEdge(rubiksCubeFirstCross, c1, c2);
 			
 			while (edgePos[0] != 2) // place it
 			{
-				fillAnswerTab(rubiksCubeFirstCross, firstCross.move, faceOfOtherSideOfEdge, firstCross.turn, 1, firstCross.message, message);
+				fillAnswerTab(rubiksCubeFirstCross, faceOfOtherSideOfEdge, 1, message, "first cross");
 				edgePos = findUnitaryEdge(rubiksCubeFirstCross, c1, c2);
 			}
 			
 			while (edgePos[2] != 2) // fully place it
 			{
-				fillAnswerTab(rubiksCubeFirstCross, firstCross.move, 2, firstCross.turn, 1, firstCross.message, message);
+				fillAnswerTab(rubiksCubeFirstCross, 2, 1, message, "first cross");
 				edgePos = findUnitaryEdge(rubiksCubeFirstCross, c1, c2);
 			}
 		}
 	}
 	
-	SubSolution doFirstCross()
+	Solution doFirstCross()
 	{
-		SubSolution firstCross = new SubSolution(25); // 25 is max number of moves to solve the cross
+		Solution firstCross = new Solution(25); // 25 is max number of moves to solve the cross
 		
 		// Start with blue so that it doesn't scramble a solved first cross
-		doOneEdge(Color.white, Color.blue, firstCross); 
-		doOneEdge(Color.white, Color.red, firstCross);
-		doOneEdge(Color.white, Color.green, firstCross);
-		doOneEdge(Color.white, Color.orange, firstCross);
+		doOneEdge(Color.white, Color.blue); 
+		doOneEdge(Color.white, Color.red);
+		doOneEdge(Color.white, Color.green);
+		doOneEdge(Color.white, Color.orange);
 
 		String message = "On tourne la face blanche pour placer les bords avec leur centre.";
 		// Below, "firstCross.turn, 3" only works if last edge placed is white-orange
-		fillAnswerTab(rubiksCubeFirstCross, firstCross.move, 2, firstCross.turn, 3, firstCross.message, message);
+		fillAnswerTab(rubiksCubeFirstCross, 2, 3, message, "first cross");
 		
 		return firstCross;
 	}
