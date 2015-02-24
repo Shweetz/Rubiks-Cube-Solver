@@ -55,15 +55,7 @@ public class View extends JFrame implements ActionListener, KeyListener {
         
         ActionListener a1 = new ActionListener(){
             public void actionPerformed(ActionEvent e){
-            	for(int i=0;i<6;i++)
-    			{
-    				for(int j=0;j<9;j++)
-    				{
-    					game.InitializeGrid();
-    				}
-    			}
-            	actualiserFaceAvant();
-            	fileChosen = null;
+            	nouveauFichier();
             }
         };
         ajouterItem("Nouveau", menuFichier, a1, KeyEvent.VK_N); // Nouveau reset la grille
@@ -71,7 +63,6 @@ public class View extends JFrame implements ActionListener, KeyListener {
         ActionListener a2 = new ActionListener(){
             public void actionPerformed(ActionEvent e){
             	chargerFichier("./Rubik's Cube Database");
-            	isSolving = false;
             }
         };
         ajouterItem("Charger", menuFichier, a2, KeyEvent.VK_L);
@@ -210,10 +201,38 @@ public class View extends JFrame implements ActionListener, KeyListener {
         
         ActionListener a21 = new ActionListener(){
             public void actionPerformed(ActionEvent e){
-            	showSolution("first face");
+            	showSolution("first cross");
             }
         };
-        ajouterItem("Faire une face", menuResoudre, a21);
+        ajouterItem("Faire la croix blanche", menuResoudre, a21);
+        
+        ActionListener a22 = new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+            	showSolution("first corners");
+            }
+        };
+        ajouterItem("Faire une face", menuResoudre, a22);
+        
+        ActionListener a23 = new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+            	showSolution("second layer");
+            }
+        };
+        ajouterItem("Faire 2 couronnes", menuResoudre, a23);
+        
+        ActionListener a24 = new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+            	showSolution("second cross");
+            }
+        };
+        ajouterItem("Faire 2 couronnes et la croix jaune", menuResoudre, a24);
+        
+        ActionListener a25 = new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+            	showSolution("second edges");
+            }
+        };
+        ajouterItem("Faire 2 couronnes et la croix jaune avec bords orientés", menuResoudre, a25);
         
          // Relier les menus à la fenêtre
 		JMenuBar barreDeMenu = new JMenuBar();
@@ -237,6 +256,28 @@ public class View extends JFrame implements ActionListener, KeyListener {
         item.addActionListener(a);
         item.setAccelerator(KeyStroke.getKeyStroke(key, ActionEvent.CTRL_MASK));
 	}
+
+	private void nouveauFichier()
+	{
+		for(int i=0;i<6;i++)
+		{
+			for(int j=0;j<9;j++)
+			{
+				game.InitializeGrid();
+			}
+		}
+		actualiserFaceAvant();
+		fileChosen = null;
+		isSolving = false;
+		
+		ihmEtape.setText("[ ] Faire la 1e face (+ 1e couronne)\n"
+				   + "    [ ] Faire la croix\n"
+				   + "    [ ] Faire les coins\n"
+				   + "[ ] Faire la 2e couronne\n"
+				   + "[ ] Faire la croix de la face opposée\n"
+				   + "[ ] Orienter les bords\n"
+				   + "[ ] Orienter les coins\n");	
+	}
 	
 	private void chargerFichier(String dossier)
 	{
@@ -254,6 +295,14 @@ public class View extends JFrame implements ActionListener, KeyListener {
     	}	
     	
     	isSolving = false;
+    	
+    	ihmEtape.setText("[ ] Faire la 1e face (+ 1e couronne)\n"
+				   + "    [ ] Faire la croix\n"
+				   + "    [ ] Faire les coins\n"
+				   + "[ ] Faire la 2e couronne\n"
+				   + "[ ] Faire la croix de la face opposée\n"
+				   + "[ ] Orienter les bords\n"
+				   + "[ ] Orienter les coins\n");	
 	}		
 	
 	private void enregistrerFichier()
@@ -282,7 +331,7 @@ public class View extends JFrame implements ActionListener, KeyListener {
     	}
 	}
 	
-	private int traductFaceToMove(int faceFromSolution)
+	private String traductFaceToMove(int faceFromSolution, int moveI)
 	{
 		/* rubiksCube
 		 * 0: white
@@ -290,29 +339,45 @@ public class View extends JFrame implements ActionListener, KeyListener {
 		 * 2: orange
 		 * 3: yellow
 		 * 4: green
-		 * 5: red
-		 * 
-		 * rubiksCubeFirstCross	
-		 * 0: red				
-		 * 1: blue				
-		 * 2: white				
-		 * 3: orange			
-		 * 4: green				
-		 * 5: yellow			
-		*/
-		if (faceFromSolution == 0)	return 5;
-		if (faceFromSolution == 1)	return 1;
-		if (faceFromSolution == 2)	return 0;
-		if (faceFromSolution == 3)	return 2;
-		if (faceFromSolution == 4)	return 4;
-		if (faceFromSolution == 5)	return 3;
+		 * 5: red*/
 		
-		return -1;
+		// rubiksCubeFirstCross
+		if (solution.step[moveI].equals("first cross"))
+		{
+			if (faceFromSolution == 0)	return "red";
+			if (faceFromSolution == 1)	return "blue";
+			if (faceFromSolution == 2)	return "white";
+			if (faceFromSolution == 3)	return "orange";
+			if (faceFromSolution == 4)	return "green";
+			if (faceFromSolution == 5)	return "yellow";
+		}
+		
+		// rubiksCubeFirstCorners
+		if (solution.step[moveI].equals("first corners"))
+		{
+			if (faceFromSolution == 0)	return "orange";
+			if (faceFromSolution == 1)	return "blue";
+			if (faceFromSolution == 2)	return "yellow";
+			if (faceFromSolution == 3)	return "red";
+			if (faceFromSolution == 4)	return "green";
+			if (faceFromSolution == 5)	return "white";
+		}
+		
+		return "none";
 	}
 	
 	private void showMove(int moveI)
 	{
-		int faceToTurn = traductFaceToMove(solution.move[moveI]);
+		if (solution.turn[moveI] == 0) return;
+		
+		String face = traductFaceToMove(solution.move[moveI], moveI);
+		int faceToTurn = -1;
+		if 		(face == "white")  faceToTurn = 0;
+		else if (face == "blue")   faceToTurn = 1;
+		else if (face == "orange") faceToTurn = 2;
+		else if (face == "yellow") faceToTurn = 3;
+		else if (face == "green")  faceToTurn = 4;
+		else if (face == "red")    faceToTurn = 5;
 		
 		if (solution.turn[moveI] == 1)
 		{
@@ -336,9 +401,65 @@ public class View extends JFrame implements ActionListener, KeyListener {
 							+ "Appuyer sur enter pour voir le move suivant, étoile (*) pour le précédent.");
 		
 		if (solution.step[moveI] == "first cross")
-			ihmEtape.setText("first cross");
+		{
+			ihmEtape.setText("[o] Faire la 1e face (+ 1e couronne)\n"
+					   	   + "    [o] Faire la croix\n"
+					   	   + "    [ ] Faire les coins\n"
+					   	   + "[ ] Faire la 2e couronne\n"
+					   	   + "[ ] Faire la croix de la face opposée\n"
+					   	   + "[ ] Orienter les bords\n"
+					   	   + "[ ] Orienter les coins\n");
+		}
 		else if (solution.step[moveI] == "first corners")
-			ihmEtape.setText("first corners");
+		{
+			ihmEtape.setText("[o] Faire la 1e face (+ 1e couronne)\n"
+					   	   + "    [X] Faire la croix\n"
+					   	   + "    [o] Faire les coins\n"
+					   	   + "[ ] Faire la 2e couronne\n"
+					   	   + "[ ] Faire la croix de la face opposée\n"
+					   	   + "[ ] Orienter les bords\n"
+					   	   + "[ ] Orienter les coins\n");
+		}
+		else if (solution.step[moveI] == "second layer")
+		{
+			ihmEtape.setText("[X] Faire la 1e face (+ 1e couronne)\n"
+					   	   + "    [X] Faire la croix\n"
+					   	   + "    [X] Faire les coins\n"
+					   	   + "[o] Faire la 2e couronne\n"
+					   	   + "[ ] Faire la croix de la face opposée\n"
+					   	   + "[ ] Orienter les bords\n"
+					   	   + "[ ] Orienter les coins\n");
+		}
+		else if (solution.step[moveI] == "second cross")
+		{
+			ihmEtape.setText("[X] Faire la 1e face (+ 1e couronne)\n"
+					   	   + "    [X] Faire la croix\n"
+					   	   + "    [X] Faire les coins\n"
+					   	   + "[X] Faire la 2e couronne\n"
+					   	   + "[o] Faire la croix de la face opposée\n"
+					   	   + "[ ] Orienter les bords\n"
+					   	   + "[ ] Orienter les coins\n");
+		}
+		else if (solution.step[moveI] == "second edges")
+		{
+			ihmEtape.setText("[X] Faire la 1e face (+ 1e couronne)\n"
+					   	   + "    [X] Faire la croix\n"
+					   	   + "    [X] Faire les coins\n"
+					   	   + "[X] Faire la 2e couronne\n"
+					   	   + "[X] Faire la croix de la face opposée\n"
+					   	   + "[o] Orienter les bords\n"
+					   	   + "[ ] Orienter les coins\n");
+		}
+		else if (solution.step[moveI] == "second corners")
+		{
+			ihmEtape.setText("[X] Faire la 1e face (+ 1e couronne)\n"
+					   	   + "    [X] Faire la croix\n"
+					   	   + "    [X] Faire les coins\n"
+					   	   + "[X] Faire la 2e couronne\n"
+					   	   + "[X] Faire la croix de la face opposée\n"
+					   	   + "[X] Orienter les bords\n"
+					   	   + "[o] Orienter les coins\n");
+		}
 	}
 	
 	private void showSolution(String solveStep)
@@ -348,10 +469,7 @@ public class View extends JFrame implements ActionListener, KeyListener {
     	solution = game.solve(solveStep);
     	if (solution.isSolvable == true)
     	{
-	    	//if (solveStep.equals("first face"));
-	    	//{
-	    		showMove(moveI = 0);
-	    	//}
+	    	showMove(moveI = 0);
     	}
     	else
     	{

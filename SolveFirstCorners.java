@@ -39,128 +39,127 @@ public class SolveFirstCorners extends Model {
 		rubiksCubeFirstCorners[4] = turnFace(rubiksCubeFirstCorners[4]);	
 	}
 	
-	void doOneEdge(Color c1, Color c2, Solution firstCross)
+	void doOneCorner(Solution solution, Color c1, Color c2)
 	{
 		String message = "";
-		String bord = "blanc-";
-		int[] edgePos = findUnitaryEdge(rubiksCubeFirstCorners, c1, c2);
+		String coin = "blanc-";
+		int[] cornerPos = findUnitaryCorner(rubiksCubeFirstCorners, c1, c2);
 		if (c2.equals(Color.green))
-			bord += "vert ";
+			coin += "vert-";
 		else if (c2.equals(Color.orange))
-			bord += "orange ";
+			coin += "orange-";
 		else if (c2.equals(Color.blue))
-			bord += "bleu ";
+			coin += "bleu-";
 		else if (c2.equals(Color.red))
-			bord += "rouge ";
+			coin += "rouge-";
 		
-		// If the white part of the edge we want is on the white face
-		if (edgePos[0] == 2 && edgePos[1] == 1 && edgePos[2] == 2) // the edge is fully placed
-		{ }
-		else if (edgePos[0] == 2 && edgePos[1] == 2 && edgePos[2] == 1) // the edge is placed
+		int cornerPosC2 = otherSideOfUnitaryCube[cornerPos[0]][cornerPos[1]][cornerPos[2]];
+		Color c3 = getOtherSideOfUnitaryCube(rubiksCubeFirstCorners, cornerPosC2/100, (cornerPosC2/10)%10, cornerPosC2%10);
+		if (c3.equals(Color.green))
+			coin += "vert";
+		else if (c3.equals(Color.orange))
+			coin += "orange";
+		else if (c3.equals(Color.blue))
+			coin += "bleu";
+		else if (c3.equals(Color.red))
+			coin += "rouge";
+		
+		// The corner is already placed
+		if (cornerPos[0] == 5 && cornerPos[1] == 0 && cornerPos[2] == 2) // the corner is placed
 		{
-			message = "Le bord " + bord + "est bien positionné, mettons-le à droite "
-					+ "pour placer le prochain en bas de la face blanche";
-			fillAnswerTab(rubiksCubeFirstCorners, 2, 3, message, "first corners"); // fully placed
+			message = "Le coin " + coin + " est bien positionné, tournons la face du bas vers la droite "
+					+ "pour placer le prochain coin";
+			fillAnswerTab(solution, rubiksCubeFirstCorners, 5, 1, message, "first corners"); // fully placed
 		}
-		else if (edgePos[0] == 2)
+		else // Need to place it
 		{
-			message = "Le bord " + bord + "est sur la bonne face, mais pas où il faut. Pour ne pas déranger le "
-					+ "reste, on va le mettre sur la face opposée, la tourner pour positionner le bord "
-					+ "puis le remettre sur la bonne face. Ensuite on le met à droite pour laisser la place "
-					+ "au prochain bord.";
-			if (edgePos[1] == 1) // he's left of white face
+			// If the corner isn't on a side face, top side, place it there	
+			
+			if (cornerPos[0] == 2 || cornerPos[0] == 5 || cornerPos[1] != 0) 
 			{
-				fillAnswerTab(rubiksCubeFirstCorners, 4, 2, message, "first corners"); // put on opposite face
-				fillAnswerTab(rubiksCubeFirstCorners, 5, 1, message, "first corners"); // move opposite face
-				fillAnswerTab(rubiksCubeFirstCorners, 0, 2, message, "first corners"); // placed (2, 1, 2)
-				fillAnswerTab(rubiksCubeFirstCorners, 2, 3, message, "first corners"); // fully placed (2, 2, 1)
-			}
-			else if (edgePos[1] == 0) // he's top of white face
-			{
-				fillAnswerTab(rubiksCubeFirstCorners, 3, 2, message, "first corners"); // put on opposite face
-				fillAnswerTab(rubiksCubeFirstCorners, 5, 2, message, "first corners"); // move opposite face
-				fillAnswerTab(rubiksCubeFirstCorners, 0, 2, message, "first corners"); // placed
-				fillAnswerTab(rubiksCubeFirstCorners, 2, 3, message, "first corners"); // fully placed
-			}
-		}
-		// If the white part of the edge we want is on the yellow face
-		else if (edgePos[0] == 5) 
-		{
-			message = "Le bord " + bord + "est sur la face opposée, on va donc la tourner pour positionner le bord "
-					+ "(si besoin) puis le remettre sur la bonne face. Ensuite on le met à droite pour "
-					+ "laisser la place au prochain bord.";
-			while (edgePos[1] != 0)
-			{
-				fillAnswerTab(rubiksCubeFirstCorners, 5, 1, message, "first corners"); // move opposite face
-				edgePos = findUnitaryEdge(rubiksCubeFirstCorners, c1, c2);
-			}
-			fillAnswerTab(rubiksCubeFirstCorners, 0, 2, message, "first corners"); // placed
-			fillAnswerTab(rubiksCubeFirstCorners, 2, 3, message, "first corners"); // fully placed
-		}
-		// If the white part of the edge we want is on other faces
-		else
-		{
-			if (edgePos[1] == 1) // On the middle slice (tranche du milieu)
-			{
-				message = "Le bord " + bord + "est sur une face latérale, on va prendre en face de nous la face sur "
-						+ "laquelle se trouve la vignette non blanche du bord que l'on veut placer (toujours avec "
-						+ "la face blanche en haut) puis on tourne la face blanche pour la ramener comme on la voyait, "
-						+ "et finalement placer le bord. Ensuite on le met à droite pour laisser la place "
-						+ "au prochain bord.";
-			}
-			else // In this case, before algorithm we need to move the face of non-white part of the edge we want
-			{
-				message = "Le bord " + bord + "est sur une face latérale mais pas sur la tranche du milieu, on va "
-						+ "tourner une fois la face sur laquelle se trouve la vignette blanche du bord que l'on "
-						+ "veut placer. Ensuite on va prendre en face de nous la face sur "
-						+ "laquelle se trouve la vignette non blanche du bord que l'on veut placer (toujours avec "
-						+ "la face blanche en haut) puis on tourne la face blanche pour la ramener comme on la voyait, "
-						+ "et finalement placer le bord. Ensuite on le met à droite pour laisser la place "
-						+ "au prochain bord.";
-				
-				fillAnswerTab(rubiksCubeFirstCorners, edgePos[0], 1, message, "first corners"); 				
-				edgePos = findUnitaryEdge(rubiksCubeFirstCorners, c1, c2);
+				if (cornerPos[0] == 2) // Corner is on top face
+				{
+					message = "Le coin " + coin + " est sur la face d'en haut, on va commencer par le placer "
+							+ "sur une face latérale, couronne du haut. Pour cela, on le place au-dessus "
+							+ "de l'endroit où on le placera, on déplace le bord associé, on sort le coin de "
+							+ "la face tournée et on replace le bord.";
+					while (cornerPos[1] != 2 && cornerPos[2] != 2)
+					{
+						fillAnswerTab(solution, rubiksCubeFirstCorners, 2, 1, message, "first corners"); // put corner on bottom-left
+						cornerPos = findUnitaryCorner(rubiksCubeFirstCorners, c1, c2);
+					}
+					fillAnswerTab(solution, rubiksCubeFirstCorners, 1, 1, message, "first corners"); // Unplace it in 3 moves
+					fillAnswerTab(solution, rubiksCubeFirstCorners, 2, 2, message, "first corners");
+					fillAnswerTab(solution, rubiksCubeFirstCorners, 1, 3, message, "first corners");
+				}
+				else if (cornerPos[0] == 5) // Corner is on bottom face
+				{
+					message = "Le coin " + coin + " est sur la face d'en bas, on va commencer par le placer "
+							+ "sur une face latérale, couronne du haut. Pour cela, on déplace le bord associé, "
+							+ "on sort le coin de la face tournée et on replace le bord.";
+					
+					int faceOfOtherSideOfCorner = otherSideOfUnitaryCube[cornerPos[0]][cornerPos[1]][cornerPos[2]]/100;
+					
+					fillAnswerTab(solution, rubiksCubeFirstCorners, faceOfOtherSideOfCorner, 3, message, "first corners"); // Unplace it in 3 moves
+					fillAnswerTab(solution, rubiksCubeFirstCorners, 2, 2, message, "first corners");
+					fillAnswerTab(solution, rubiksCubeFirstCorners, faceOfOtherSideOfCorner, 1, message, "first corners");
+				}
+				else // Corner is on a side face
+				{
+					message = "Le coin " + coin + " est sur la face latérale mais sur la 1e couronne, on va "
+							+ "commencer par le placer sur une face latérale, couronne du haut, sans casser la croix. "
+							+ "Pour cela, "
+							+ "on déplace le bord associé, on sort le coin de la face tournée et on replace le bord.";
+					
+					fillAnswerTab(solution, rubiksCubeFirstCorners, cornerPos[0], 1, message, "first corners"); // Unplace it in 3 moves
+					if (cornerPos[2] == 2)
+						fillAnswerTab(solution, rubiksCubeFirstCorners, cornerPos[0], 2, message, "first corners");
+					fillAnswerTab(solution, rubiksCubeFirstCorners, 2, 2, message, "first corners");
+					fillAnswerTab(solution, rubiksCubeFirstCorners, cornerPos[0], 1, message, "first corners");
+					if (cornerPos[2] == 0)
+						fillAnswerTab(solution, rubiksCubeFirstCorners, cornerPos[0], 2, message, "first corners");
+				}
 			}
 			
-			int timesToTurn = -1;
+			cornerPos = findUnitaryCorner(rubiksCubeFirstCorners, c1, c2);
 			
-			int faceOfOtherSideOfEdge = otherSideOfUnitaryCube[edgePos[0]][edgePos[1]][edgePos[2]]/100;
-			if 	    (faceOfOtherSideOfEdge==0) timesToTurn = 0;
-			else if (faceOfOtherSideOfEdge==1) timesToTurn = 3;
-			else if (faceOfOtherSideOfEdge==3) timesToTurn = 2;
-			else if (faceOfOtherSideOfEdge==4) timesToTurn = 1;
-				
-			fillAnswerTab(rubiksCubeFirstCorners, 2, timesToTurn, message, "first corners"); // move top face				
-			edgePos = findUnitaryEdge(rubiksCubeFirstCorners, c1, c2);
+			// The corner on a side face, top side	
 			
-			while (edgePos[0] != 2) // place it
+			message = "Le coin " + coin + " est prêt à être placé, on va le mettre au-dessus de l'endroit "
+					+ "où il faut l'insérer, puis sortir le bord associé, ramener le coin, et replacer le tout. "
+					+ "Ensuite on tourne la face du bas vers la droite pour placer le prochain coin.";
+			if (cornerPos[2] == 0) // on the top-left of a side face
 			{
-				fillAnswerTab(rubiksCubeFirstCorners, faceOfOtherSideOfEdge, 1, message, "first corners");
-				edgePos = findUnitaryEdge(rubiksCubeFirstCorners, c1, c2);
+				while (cornerPos[0] != 1)
+				{
+					fillAnswerTab(solution, rubiksCubeFirstCorners, 2, 1, message, "first corners"); // put corner on right face
+					cornerPos = findUnitaryCorner(rubiksCubeFirstCorners, c1, c2);
+				}
+				fillAnswerTab(solution, rubiksCubeFirstCorners, 1, 1, message, "first corners"); // Place it in 3 moves
+				fillAnswerTab(solution, rubiksCubeFirstCorners, 2, 1, message, "first corners");
+				fillAnswerTab(solution, rubiksCubeFirstCorners, 1, 3, message, "first corners");
 			}
-			
-			while (edgePos[2] != 2) // fully place it
+			else if (cornerPos[2] == 2) // on the top-right of a side face
 			{
-				fillAnswerTab(rubiksCubeFirstCorners, 2, 1, message, "first corners");
-				edgePos = findUnitaryEdge(rubiksCubeFirstCorners, c1, c2);
+				while (cornerPos[0] != 0)
+				{
+					fillAnswerTab(solution, rubiksCubeFirstCorners, 2, 1, message, "first corners"); // put corner on right face
+					cornerPos = findUnitaryCorner(rubiksCubeFirstCorners, c1, c2);
+				}
+				fillAnswerTab(solution, rubiksCubeFirstCorners, 0, 3, message, "first corners"); // Place it in 3 moves
+				fillAnswerTab(solution, rubiksCubeFirstCorners, 2, 3, message, "first corners");
+				fillAnswerTab(solution, rubiksCubeFirstCorners, 0, 1, message, "first corners");
 			}
+			fillAnswerTab(solution, rubiksCubeFirstCorners, 5, 1, message, "first corners"); // fully placed			
 		}
 	}
 	
-	Solution doFirstCross()
+	void doFirstCorners(Solution solution)
 	{
-		Solution firstCross = new Solution(25); // 25 is max number of moves to solve the cross
-		
-		// Start with blue so that it doesn't scramble a solved first cross
-		doOneEdge(Color.white, Color.blue, firstCross); 
-		doOneEdge(Color.white, Color.red, firstCross);
-		doOneEdge(Color.white, Color.green, firstCross);
-		doOneEdge(Color.white, Color.orange, firstCross);
-
-		String message = "On tourne la face blanche pour placer les bords avec leur centre.";
-		// Below, "firstCross.turn, 3" only works if last edge placed is white-orange
-		fillAnswerTab(rubiksCubeFirstCorners, 2, 3, message, "first corners");
-		
-		return firstCross;
+		// Start with orange so that it doesn't scramble a solved first corners
+		doOneCorner(solution, Color.white, Color.orange);
+		doOneCorner(solution, Color.white, Color.green);
+		doOneCorner(solution, Color.white, Color.red);
+		doOneCorner(solution, Color.white, Color.blue); 
 	}
 }
