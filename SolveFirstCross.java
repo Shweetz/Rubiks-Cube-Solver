@@ -19,24 +19,24 @@ public class SolveFirstCross extends Model {
 		{
 			for(int j=0;j<3;j++)
 			{
-				rubiksCubeFirstCross[0][i][j] = rubiksCube[5][i][j];				
+				rubiksCubeFirstCross[0][i][j] = rubiksCube[5][i][j];
 				rubiksCubeFirstCross[1][i][j] = rubiksCube[1][i][j];
 				rubiksCubeFirstCross[2][i][j] = rubiksCube[0][i][j];
-				rubiksCubeFirstCross[3][i][j] = rubiksCube[2][i][j];				
+				rubiksCubeFirstCross[3][i][j] = rubiksCube[2][i][j];
 				rubiksCubeFirstCross[4][i][j] = rubiksCube[4][i][j];
 				rubiksCubeFirstCross[5][i][j] = rubiksCube[3][i][j];
 			}
 		}
 		
 		// Orient faces
-		rubiksCubeFirstCross[1] = turnFace(rubiksCubeFirstCross[1]);		
+		rubiksCubeFirstCross[1] = turnFace(rubiksCubeFirstCross[1]);
 		rubiksCubeFirstCross[3] = turnFace(rubiksCubeFirstCross[3]);
 		rubiksCubeFirstCross[3] = turnFace(rubiksCubeFirstCross[3]);
 		rubiksCubeFirstCross[4] = turnFace(rubiksCubeFirstCross[4]);
 		rubiksCubeFirstCross[4] = turnFace(rubiksCubeFirstCross[4]);
 		rubiksCubeFirstCross[4] = turnFace(rubiksCubeFirstCross[4]);
 		rubiksCubeFirstCross[5] = turnFace(rubiksCubeFirstCross[5]);
-		rubiksCubeFirstCross[5] = turnFace(rubiksCubeFirstCross[5]);		
+		rubiksCubeFirstCross[5] = turnFace(rubiksCubeFirstCross[5]);
 	}
 	
 	void doOneEdge(Solution solution, Color c1, Color c2)

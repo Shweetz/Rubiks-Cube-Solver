@@ -34,6 +34,7 @@ public class View extends JFrame implements ActionListener, KeyListener {
 	int turnTimes;
 	boolean isSolving = false;
 	int moveI = 0;
+	int numberOfMoves = 0;
 	
 	public View(int largeur, int hauteur){ //on cree la fenetre
 		super("Rubik's Cube");
@@ -271,12 +272,12 @@ public class View extends JFrame implements ActionListener, KeyListener {
 		isSolving = false;
 		
 		ihmEtape.setText("[ ] Faire la 1e face (+ 1e couronne)\n"
-				   + "    [ ] Faire la croix\n"
-				   + "    [ ] Faire les coins\n"
-				   + "[ ] Faire la 2e couronne\n"
-				   + "[ ] Faire la croix de la face opposée\n"
-				   + "[ ] Orienter les bords\n"
-				   + "[ ] Orienter les coins\n");	
+					   + "    [ ] Faire la croix\n"
+					   + "    [ ] Faire les coins\n"
+					   + "[ ] Faire la 2e couronne\n"
+					   + "[ ] Faire la croix de la face opposée\n"
+					   + "[ ] Orienter les bords\n"
+					   + "[ ] Orienter les coins\n");	
 	}
 	
 	private void chargerFichier(String dossier)
@@ -353,7 +354,8 @@ public class View extends JFrame implements ActionListener, KeyListener {
 		}
 		
 		// rubiksCubeFirstCorners
-		if (solution.step[moveI].equals("first corners"))
+		//if (solution.step[moveI].equals("first corners"))
+		else
 		{
 			if (faceFromSolution == 0)	return "orange";
 			if (faceFromSolution == 1)	return "blue";
@@ -366,9 +368,13 @@ public class View extends JFrame implements ActionListener, KeyListener {
 		return "none";
 	}
 	
-	private void showMove(int moveI)
+	private void showMove()
 	{
-		if (solution.turn[moveI] == 0) return;
+		if (solution.turn[moveI] == 0) 
+		{
+			moveI--;
+			return;
+		}
 		
 		String face = traductFaceToMove(solution.move[moveI], moveI);
 		int faceToTurn = -1;
@@ -397,7 +403,8 @@ public class View extends JFrame implements ActionListener, KeyListener {
 		}
 		
 		if (solution.turn[moveI] != 0)
-			ihmMessage.setText(Integer.toString(moveI) + "\n\n" + solution.message[moveI] + "\n\n"
+			ihmMessage.setText(Integer.toString(moveI) + "/" + numberOfMoves + "\n\n" 
+							+ solution.message[moveI] + "\n\n"
 							+ "Appuyer sur enter pour voir le move suivant, étoile (*) pour le précédent.");
 		
 		if (solution.step[moveI] == "first cross")
@@ -469,7 +476,14 @@ public class View extends JFrame implements ActionListener, KeyListener {
     	solution = game.solve(solveStep);
     	if (solution.isSolvable == true)
     	{
-	    	showMove(moveI = 0);
+    		// Count number of moves total
+    		numberOfMoves = 0;
+    		while (solution.turn[numberOfMoves+1] != 0)
+    			numberOfMoves++;
+    		
+    		// Do first move
+    		moveI = 0;
+	    	showMove();
     	}
     	else
     	{
@@ -845,16 +859,19 @@ public class View extends JFrame implements ActionListener, KeyListener {
 		if (evt.getKeyCode() == KeyEvent.VK_ENTER) 
 		{
 			if (isSolving)
-				showMove(++moveI);
+			{
+				moveI++;
+				showMove();
+			}
 		}
 		if (evt.getKeyCode() == KeyEvent.VK_ASTERISK) 
 		{
 			if (isSolving && moveI >= 0)
 			{
-				// Do 3 times more the move we did to undo it... not optimized but the clearest way to do it
-				showMove(moveI);
-				showMove(moveI);
-				showMove(moveI);
+				// Do 3 times more the move we did to undo it... not performance-optimized but most readable way to do it
+				showMove();
+				showMove();
+				showMove();
 				
 				moveI--;
 			}

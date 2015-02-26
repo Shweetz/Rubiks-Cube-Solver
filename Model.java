@@ -385,6 +385,12 @@ public class Model {
 		if (solution.isSolvable == false || solvingStep.equals("first corners"))
 			return solution;
 		
+		SolveSecondLayer answer3 = new SolveSecondLayer(answer2.rubiksCubeFirstCorners);
+		answer3.doSecondLayer(solution);
+		
+		if (solution.isSolvable == false || solvingStep.equals("second layer"))
+			return solution;
+		
 		return solution;
 	}	
 }

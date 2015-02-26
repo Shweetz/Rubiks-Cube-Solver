@@ -19,10 +19,10 @@ public class SolveFirstCorners extends Model {
 		{
 			for(int j=0;j<3;j++)
 			{
-				rubiksCubeFirstCorners[0][i][j] = rubiksCubeFirstCross[3][i][j];				
+				rubiksCubeFirstCorners[0][i][j] = rubiksCubeFirstCross[3][i][j];
 				rubiksCubeFirstCorners[1][i][j] = rubiksCubeFirstCross[1][i][j];
 				rubiksCubeFirstCorners[2][i][j] = rubiksCubeFirstCross[5][i][j];
-				rubiksCubeFirstCorners[3][i][j] = rubiksCubeFirstCross[0][i][j];				
+				rubiksCubeFirstCorners[3][i][j] = rubiksCubeFirstCross[0][i][j];
 				rubiksCubeFirstCorners[4][i][j] = rubiksCubeFirstCross[4][i][j];
 				rubiksCubeFirstCorners[5][i][j] = rubiksCubeFirstCross[2][i][j];
 			}
@@ -31,12 +31,12 @@ public class SolveFirstCorners extends Model {
 		// Orient faces
 		rubiksCubeFirstCorners[0] = turnFace(rubiksCubeFirstCorners[0]);
 		rubiksCubeFirstCorners[0] = turnFace(rubiksCubeFirstCorners[0]);
-		rubiksCubeFirstCorners[1] = turnFace(rubiksCubeFirstCorners[1]);	
-		rubiksCubeFirstCorners[1] = turnFace(rubiksCubeFirstCorners[1]);		
+		rubiksCubeFirstCorners[1] = turnFace(rubiksCubeFirstCorners[1]);
+		rubiksCubeFirstCorners[1] = turnFace(rubiksCubeFirstCorners[1]);
 		rubiksCubeFirstCorners[3] = turnFace(rubiksCubeFirstCorners[3]);
 		rubiksCubeFirstCorners[3] = turnFace(rubiksCubeFirstCorners[3]);
 		rubiksCubeFirstCorners[4] = turnFace(rubiksCubeFirstCorners[4]);
-		rubiksCubeFirstCorners[4] = turnFace(rubiksCubeFirstCorners[4]);	
+		rubiksCubeFirstCorners[4] = turnFace(rubiksCubeFirstCorners[4]);
 	}
 	
 	void doOneCorner(Solution solution, Color c1, Color c2)
