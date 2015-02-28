@@ -7,6 +7,7 @@ public class SolveSecondLayer extends Model {
 			
 	public SolveSecondLayer(Color[][][] rubiksCubeFirstCorners) 
 	{
+		// Orange is front face and yellow is top face
 		rubiksCubeSecondLayer = rubiksCubeFirstCorners;
 		InitializeOtherSideTab();
 	}
@@ -16,7 +17,7 @@ public class SolveSecondLayer extends Model {
 		String message = "";
 		String bord = "";
 		int goodFace = -1;
-		int faceToTakeTop = 2;
+		int faceToTakeTop = 2; // never changes
 		int faceToTakeFront = -1;
 		int faceToTakeLeft = -1;
 		int faceToTakeRight = -1;
