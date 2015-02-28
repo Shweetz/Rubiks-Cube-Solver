@@ -345,12 +345,12 @@ public class View extends JFrame implements ActionListener, KeyListener {
 		// rubiksCubeFirstCross
 		if (solution.step[moveI].equals("first cross"))
 		{
-			if (faceFromSolution == 0)	return "red";
-			if (faceFromSolution == 1)	return "blue";
-			if (faceFromSolution == 2)	return "white";
+			if (faceFromSolution == 0)	return "rouge";
+			if (faceFromSolution == 1)	return "bleue";
+			if (faceFromSolution == 2)	return "blanche";
 			if (faceFromSolution == 3)	return "orange";
-			if (faceFromSolution == 4)	return "green";
-			if (faceFromSolution == 5)	return "yellow";
+			if (faceFromSolution == 4)	return "verte";
+			if (faceFromSolution == 5)	return "jaune";
 		}
 		
 		// rubiksCubeFirstCorners
@@ -358,11 +358,11 @@ public class View extends JFrame implements ActionListener, KeyListener {
 		else
 		{
 			if (faceFromSolution == 0)	return "orange";
-			if (faceFromSolution == 1)	return "blue";
-			if (faceFromSolution == 2)	return "yellow";
-			if (faceFromSolution == 3)	return "red";
-			if (faceFromSolution == 4)	return "green";
-			if (faceFromSolution == 5)	return "white";
+			if (faceFromSolution == 1)	return "bleue";
+			if (faceFromSolution == 2)	return "jaune";
+			if (faceFromSolution == 3)	return "rouge";
+			if (faceFromSolution == 4)	return "verte";
+			if (faceFromSolution == 5)	return "blanche";
 		}
 		
 		return "none";
@@ -378,34 +378,52 @@ public class View extends JFrame implements ActionListener, KeyListener {
 		
 		String face = traductFaceToMove(solution.move[moveI], moveI);
 		int faceToTurn = -1;
-		if 		(face == "white")  faceToTurn = 0;
-		else if (face == "blue")   faceToTurn = 1;
-		else if (face == "orange") faceToTurn = 2;
-		else if (face == "yellow") faceToTurn = 3;
-		else if (face == "green")  faceToTurn = 4;
-		else if (face == "red")    faceToTurn = 5;
+		if 		(face == "blanche")	faceToTurn = 0;
+		else if (face == "bleue")   faceToTurn = 1;
+		else if (face == "orange") 	faceToTurn = 2;
+		else if (face == "jaune") 	faceToTurn = 3;
+		else if (face == "verte")  	faceToTurn = 4;
+		else if (face == "rouge")   faceToTurn = 5;
 		
+		String messageIntermediate = "";
 		if (solution.turn[moveI] == 1)
 		{
             	game.turnRubiksCube(game.rubiksCube, faceToTurn, true);
             	actualiserFaceAvant();
+            	messageIntermediate = solution.message[moveI] 
+            			+ "\n\nOn vient ici de tourner la face " + face + " dans le sens horaire.";
 		}
 		else if (solution.turn[moveI] == 2)
 		{
             	game.turnRubiksCube(game.rubiksCube, faceToTurn, true);
             	game.turnRubiksCube(game.rubiksCube, faceToTurn, true);
             	actualiserFaceAvant();
+            	messageIntermediate = solution.message[moveI] 
+            			+ "\n\nOn vient ici de tourner la face " + face + " d'un demi-tour.";
 		}
 		else if (solution.turn[moveI] == 3)
 		{
             	game.turnRubiksCube(game.rubiksCube, faceToTurn, false);
             	actualiserFaceAvant();
+            	messageIntermediate = solution.message[moveI] 
+            			+ "\n\nOn vient ici de tourner la face " + face + " dans le sens anti-horaire.";
 		}
 		
 		if (solution.turn[moveI] != 0)
-			ihmMessage.setText(Integer.toString(moveI) + "/" + numberOfMoves + "\n\n" 
-							+ solution.message[moveI] + "\n\n"
+			ihmMessage.setText("Mouvement n°" + Integer.toString(moveI) + "/" + numberOfMoves + "\n\n" 
+							+ messageIntermediate + "\n\n"
 							+ "Appuyer sur enter pour voir le move suivant, étoile (*) pour le précédent.");
+		
+		// ihmEtape
+		String faceInitials = "Signification des initiales :\n"
+							 + "U : Face du haut sens horaire (Up)\n"
+							 + "R : Face de droite sens horaire (Right)\n"
+		 					 + "L : Face de gauche sens horaire (Left)\n"
+		 					 + "F : Face de devant sens horaire (Front)\n\n"
+		 					 + "U' : Face du haut sens anti-horaire\n"
+							 + "R' : Face de droite sens anti-horaire\n"
+		 					 + "L' : Face de gauche sens anti-horaire\n"
+		 					 + "F' : Face de devant sens anti-horaire\n";
 		
 		if (solution.step[moveI] == "first cross")
 		{
@@ -415,7 +433,7 @@ public class View extends JFrame implements ActionListener, KeyListener {
 					   	   + "[ ] Faire la 2e couronne\n"
 					   	   + "[ ] Faire la croix de la face opposée\n"
 					   	   + "[ ] Orienter les bords\n"
-					   	   + "[ ] Orienter les coins\n");
+					   	   + "[ ] Orienter les coins\n\n");
 		}
 		else if (solution.step[moveI] == "first corners")
 		{
@@ -425,7 +443,7 @@ public class View extends JFrame implements ActionListener, KeyListener {
 					   	   + "[ ] Faire la 2e couronne\n"
 					   	   + "[ ] Faire la croix de la face opposée\n"
 					   	   + "[ ] Orienter les bords\n"
-					   	   + "[ ] Orienter les coins\n");
+					   	   + "[ ] Orienter les coins\n\n");
 		}
 		else if (solution.step[moveI] == "second layer")
 		{
@@ -435,7 +453,8 @@ public class View extends JFrame implements ActionListener, KeyListener {
 					   	   + "[o] Faire la 2e couronne\n"
 					   	   + "[ ] Faire la croix de la face opposée\n"
 					   	   + "[ ] Orienter les bords\n"
-					   	   + "[ ] Orienter les coins\n");
+					   	   + "[ ] Orienter les coins\n\n"
+					   	   + faceInitials);
 		}
 		else if (solution.step[moveI] == "second cross")
 		{
@@ -445,7 +464,8 @@ public class View extends JFrame implements ActionListener, KeyListener {
 					   	   + "[X] Faire la 2e couronne\n"
 					   	   + "[o] Faire la croix de la face opposée\n"
 					   	   + "[ ] Orienter les bords\n"
-					   	   + "[ ] Orienter les coins\n");
+					   	   + "[ ] Orienter les coins\n\n"
+					   	   + faceInitials);
 		}
 		else if (solution.step[moveI] == "second edges")
 		{
@@ -455,7 +475,8 @@ public class View extends JFrame implements ActionListener, KeyListener {
 					   	   + "[X] Faire la 2e couronne\n"
 					   	   + "[X] Faire la croix de la face opposée\n"
 					   	   + "[o] Orienter les bords\n"
-					   	   + "[ ] Orienter les coins\n");
+					   	   + "[ ] Orienter les coins\n\n"
+					   	   + faceInitials);
 		}
 		else if (solution.step[moveI] == "second corners")
 		{
@@ -465,7 +486,8 @@ public class View extends JFrame implements ActionListener, KeyListener {
 					   	   + "[X] Faire la 2e couronne\n"
 					   	   + "[X] Faire la croix de la face opposée\n"
 					   	   + "[X] Orienter les bords\n"
-					   	   + "[o] Orienter les coins\n");
+					   	   + "[o] Orienter les coins\n\n"
+					   	   + faceInitials);
 		}
 	}
 	
