@@ -397,6 +397,12 @@ public class Model {
 		if (solution.isSolvable == false || solvingStep.equals("second cross"))
 			return solution;
 		
+		SolveSecondEdges answer5 = new SolveSecondEdges(answer4.rubiksCubeSecondCross);
+		answer5.doSecondEdges(solution);
+		
+		if (solution.isSolvable == false || solvingStep.equals("second edges"))
+			return solution;
+		
 		return solution;
 	}	
 }
