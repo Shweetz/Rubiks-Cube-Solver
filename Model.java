@@ -403,6 +403,12 @@ public class Model {
 		if (solution.isSolvable == false || solvingStep.equals("second edges"))
 			return solution;
 		
+		SolveSecondCornersPosition answer6 = new SolveSecondCornersPosition(answer5.rubiksCubeSecondEdges);
+		answer6.doSecondCornersPosition(solution);
+		
+		if (solution.isSolvable == false || solvingStep.equals("second corners position"))
+			return solution;
+		
 		return solution;
 	}	
 }
