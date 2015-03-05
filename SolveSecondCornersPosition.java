@@ -219,7 +219,6 @@ public class SolveSecondCornersPosition extends Model {
 				fillAnswerTab(solution, rubiksCubeSCP, faceToTakeTop, 1, message, "second corners position"); // U
 				fillAnswerTab(solution, rubiksCubeSCP, faceToTakeRight, 1, message, "second corners position"); // R					
 			}
-			// garder
 			
 			corner = getCorrectlyPositionedCorners();
 			numberOfCorners = corner[0];

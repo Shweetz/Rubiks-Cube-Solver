@@ -1,6 +1,8 @@
 ﻿import java.awt.*;
 
 import javax.swing.*;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
 
 import java.awt.event.*;
 import java.io.File;
@@ -189,56 +191,74 @@ public class View extends JFrame implements ActionListener, KeyListener {
         };
         ajouterItem("Tourner face rouge sens anti-horaire", menuTournerRubiksCube, a1b);
 
+        // Menu Melanger
+        JMenu menuMelanger = new JMenu("Mélanger");
+        menuMelanger.setMnemonic(KeyEvent.VK_M);
+        MenuListener a20 = new MenuListener(){        	
+    	    public void menuSelected(MenuEvent e) { scrambleCube(200); }    	    
+    	    public void menuDeselected(MenuEvent e) { } // need for compilation  
+    	    public void menuCanceled(MenuEvent e) { }   // need for compilation  
+        };
+        menuMelanger.addMenuListener(a20);
+        
         // Menu Resoudre
         JMenu menuResoudre = new JMenu("Résoudre");
         menuResoudre.setMnemonic(KeyEvent.VK_R);
         
-        ActionListener a20 = new ActionListener(){
+        ActionListener a30 = new ActionListener(){
             public void actionPerformed(ActionEvent e){
             	showSolution("full");
             }
         };
-        ajouterItem("Résoudre complètement", menuResoudre, a20);
+        ajouterItem("Résoudre complètement", menuResoudre, a30);
         
-        ActionListener a21 = new ActionListener(){
+        ActionListener a31 = new ActionListener(){
             public void actionPerformed(ActionEvent e){
             	showSolution("first cross");
             }
         };
-        ajouterItem("Faire la croix blanche", menuResoudre, a21);
+        ajouterItem("Faire la croix blanche", menuResoudre, a31);
         
-        ActionListener a22 = new ActionListener(){
+        ActionListener a32 = new ActionListener(){
             public void actionPerformed(ActionEvent e){
             	showSolution("first corners");
             }
         };
-        ajouterItem("Faire une face", menuResoudre, a22);
+        ajouterItem("Faire une face", menuResoudre, a32);
         
-        ActionListener a23 = new ActionListener(){
+        ActionListener a33 = new ActionListener(){
             public void actionPerformed(ActionEvent e){
             	showSolution("second layer");
             }
         };
-        ajouterItem("Faire 2 couronnes", menuResoudre, a23);
+        ajouterItem("Faire 2 couronnes", menuResoudre, a33);
         
-        ActionListener a24 = new ActionListener(){
+        ActionListener a34 = new ActionListener(){
             public void actionPerformed(ActionEvent e){
             	showSolution("second cross");
             }
         };
-        ajouterItem("Faire 2 couronnes et la croix jaune", menuResoudre, a24);
+        ajouterItem("Faire 2 couronnes et la croix jaune", menuResoudre, a34);
         
-        ActionListener a25 = new ActionListener(){
+        ActionListener a35 = new ActionListener(){
             public void actionPerformed(ActionEvent e){
             	showSolution("second edges");
             }
         };
-        ajouterItem("Faire 2 couronnes et la croix jaune avec bords orientés", menuResoudre, a25);
+        ajouterItem("Faire 2 couronnes et la croix jaune avec bords orientés", menuResoudre, a35);
+        
+        ActionListener a36 = new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+            	showSolution("second corners position");
+            }
+        };
+        ajouterItem("Faire 2 couronnes, la croix, les bords orientés et les coins placés", menuResoudre, a36);
         
          // Relier les menus à la fenêtre
 		JMenuBar barreDeMenu = new JMenuBar();
 		barreDeMenu.add(menuFichier);
 		barreDeMenu.add(menuTournerRubiksCube);
+		barreDeMenu.add(menuMelanger);
 		barreDeMenu.add(menuResoudre);
 		this.setJMenuBar(barreDeMenu);
 	}
@@ -298,12 +318,14 @@ public class View extends JFrame implements ActionListener, KeyListener {
     	isSolving = false;
     	
     	ihmEtape.setText("[ ] Faire la 1e face (+ 1e couronne)\n"
-				   + "    [ ] Faire la croix\n"
-				   + "    [ ] Faire les coins\n"
-				   + "[ ] Faire la 2e couronne\n"
-				   + "[ ] Faire la croix de la face opposée\n"
-				   + "[ ] Orienter les bords\n"
-				   + "[ ] Orienter les coins\n");	
+    				   + "    [ ] Faire la croix\n"
+    				   + "    [ ] Faire les coins\n"
+    				   + "[ ] Faire la 2e couronne\n"
+    				   + "[ ] Faire la croix de la face opposée\n"
+    				   + "[ ] Orienter les derniers bords\n"
+    				   + "[ ] Faire les derniers coins\n"
+    				   + "    [ ] Placer les coins\n"
+    				   + "    [ ] Orienter les coins\n");	
 	}		
 	
 	private void enregistrerFichier()
@@ -332,6 +354,17 @@ public class View extends JFrame implements ActionListener, KeyListener {
     	}
 	}
 	
+	private void scrambleCube(int numberOfScrambles)
+	{
+		for (int i = 0; i < numberOfScrambles; i++)
+		{
+			// Get random number between 0 (included) and 6 (not included) and turn this face clockwise
+			int face = (int)(Math.random()*6); 
+			game.turnRubiksCube(game.rubiksCube, face, true);			
+		}
+    	actualiserFaceAvant();
+	}
+	
 	private String traductFaceToMove(int faceFromSolution, int moveI)
 	{
 		/* rubiksCube
@@ -354,7 +387,6 @@ public class View extends JFrame implements ActionListener, KeyListener {
 		}
 		
 		// rubiksCubeFirstCorners
-		//if (solution.step[moveI].equals("first corners"))
 		else
 		{
 			if (faceFromSolution == 0)	return "orange";
@@ -410,7 +442,7 @@ public class View extends JFrame implements ActionListener, KeyListener {
 		}
 		
 		if (solution.turn[moveI] != 0)
-			ihmMessage.setText("Mouvement n°" + Integer.toString(moveI) + "/" + numberOfMoves + "\n\n" 
+			ihmMessage.setText("Mouvement n°" + Integer.toString(moveI+1) + "/" + numberOfMoves + "\n\n" 
 							+ messageIntermediate + "\n\n"
 							+ "Appuyer sur enter pour voir le move suivant, étoile (*) pour le précédent.");
 		
@@ -420,40 +452,44 @@ public class View extends JFrame implements ActionListener, KeyListener {
 							 + "R : Face de droite sens horaire (Right)\n"
 		 					 + "L : Face de gauche sens horaire (Left)\n"
 		 					 + "F : Face de devant sens horaire (Front)\n\n"
-		 					 + "U' : Face du haut sens anti-horaire\n"
-							 + "R' : Face de droite sens anti-horaire\n"
-		 					 + "L' : Face de gauche sens anti-horaire\n"
-		 					 + "F' : Face de devant sens anti-horaire\n";
+		 					 + "' signifie sens anti-horaire\n"
+							 + "2 signifie tourner 2 fois\n";
 		
 		if (solution.step[moveI] == "first cross")
 		{
-			ihmEtape.setText("[o] Faire la 1e face (+ 1e couronne)\n"
-					   	   + "    [o] Faire la croix\n"
+			ihmEtape.setText("-> Faire la 1e face (+ 1e couronne)\n"
+					   	   + "    -> Faire la croix\n"
 					   	   + "    [ ] Faire les coins\n"
 					   	   + "[ ] Faire la 2e couronne\n"
-					   	   + "[ ] Faire la croix de la face opposée\n"
-					   	   + "[ ] Orienter les bords\n"
-					   	   + "[ ] Orienter les coins\n\n");
+	    				   + "[ ] Faire la croix de la face opposée\n"
+	    				   + "[ ] Orienter les derniers bords\n"
+	    				   + "[ ] Faire les derniers coins\n"
+	    				   + "    [ ] Placer les coins\n"
+	    				   + "    [ ] Orienter les coins\n");	
 		}
 		else if (solution.step[moveI] == "first corners")
 		{
-			ihmEtape.setText("[o] Faire la 1e face (+ 1e couronne)\n"
+			ihmEtape.setText("-> Faire la 1e face (+ 1e couronne)\n"
 					   	   + "    [X] Faire la croix\n"
-					   	   + "    [o] Faire les coins\n"
+					   	   + "    -> Faire les coins\n"
 					   	   + "[ ] Faire la 2e couronne\n"
-					   	   + "[ ] Faire la croix de la face opposée\n"
-					   	   + "[ ] Orienter les bords\n"
-					   	   + "[ ] Orienter les coins\n\n");
+	    				   + "[ ] Faire la croix de la face opposée\n"
+	    				   + "[ ] Orienter les derniers bords\n"
+	    				   + "[ ] Faire les derniers coins\n"
+	    				   + "    [ ] Placer les coins\n"
+	    				   + "    [ ] Orienter les coins\n");	
 		}
 		else if (solution.step[moveI] == "second layer")
 		{
 			ihmEtape.setText("[X] Faire la 1e face (+ 1e couronne)\n"
 					   	   + "    [X] Faire la croix\n"
 					   	   + "    [X] Faire les coins\n"
-					   	   + "[o] Faire la 2e couronne\n"
-					   	   + "[ ] Faire la croix de la face opposée\n"
-					   	   + "[ ] Orienter les bords\n"
-					   	   + "[ ] Orienter les coins\n\n"
+					   	   + "-> Faire la 2e couronne\n"
+	    				   + "[ ] Faire la croix de la face opposée\n"
+	    				   + "[ ] Orienter les derniers bords\n"
+	    				   + "[ ] Faire les derniers coins\n"
+	    				   + "    [ ] Placer les coins\n"
+	    				   + "    [ ] Orienter les coins\n\n"	
 					   	   + faceInitials);
 		}
 		else if (solution.step[moveI] == "second cross")
@@ -462,9 +498,11 @@ public class View extends JFrame implements ActionListener, KeyListener {
 					   	   + "    [X] Faire la croix\n"
 					   	   + "    [X] Faire les coins\n"
 					   	   + "[X] Faire la 2e couronne\n"
-					   	   + "[o] Faire la croix de la face opposée\n"
-					   	   + "[ ] Orienter les bords\n"
-					   	   + "[ ] Orienter les coins\n\n"
+					   	   + "-> Faire la croix de la face opposée\n"
+	    				   + "[ ] Orienter les derniers bords\n"
+	    				   + "[ ] Faire les derniers coins\n"
+	    				   + "    [ ] Placer les coins\n"
+	    				   + "    [ ] Orienter les coins\n\n"	
 					   	   + faceInitials);
 		}
 		else if (solution.step[moveI] == "second edges")
@@ -474,20 +512,50 @@ public class View extends JFrame implements ActionListener, KeyListener {
 					   	   + "    [X] Faire les coins\n"
 					   	   + "[X] Faire la 2e couronne\n"
 					   	   + "[X] Faire la croix de la face opposée\n"
-					   	   + "[o] Orienter les bords\n"
-					   	   + "[ ] Orienter les coins\n\n"
+	    				   + "-> Orienter les derniers bords\n"
+	    				   + "[ ] Faire les derniers coins\n"
+	    				   + "    [ ] Placer les coins\n"
+	    				   + "    [ ] Orienter les coins\n\n"	
 					   	   + faceInitials);
 		}
-		else if (solution.step[moveI] == "second corners")
+		else if (solution.step[moveI] == "second corners position")
 		{
 			ihmEtape.setText("[X] Faire la 1e face (+ 1e couronne)\n"
 					   	   + "    [X] Faire la croix\n"
 					   	   + "    [X] Faire les coins\n"
 					   	   + "[X] Faire la 2e couronne\n"
 					   	   + "[X] Faire la croix de la face opposée\n"
-					   	   + "[X] Orienter les bords\n"
-					   	   + "[o] Orienter les coins\n\n"
+	    				   + "[X] Orienter les derniers bords\n"
+	    				   + "-> Faire les derniers coins\n"
+	    				   + "    -> Placer les coins\n"
+	    				   + "    [ ] Orienter les coins\n\n"	
 					   	   + faceInitials);
+		}
+		else if (solution.step[moveI] == "second corners orientation")
+		{
+			ihmEtape.setText("[X] Faire la 1e face (+ 1e couronne)\n"
+					   	   + "    [X] Faire la croix\n"
+					   	   + "    [X] Faire les coins\n"
+					   	   + "[X] Faire la 2e couronne\n"
+					   	   + "[X] Faire la croix de la face opposée\n"
+	    				   + "[X] Orienter les derniers bords\n"
+	    				   + "-> Faire les derniers coins\n"
+	    				   + "    [X] Placer les coins\n"
+	    				   + "    -> Orienter les coins\n\n"	
+					   	   + faceInitials);
+		}
+		else if (solution.step[moveI] == "finish")
+		{
+			ihmEtape.setText("[X] Faire la 1e face (+ 1e couronne)\n"
+					   	   + "    [X] Faire la croix\n"
+					   	   + "    [X] Faire les coins\n"
+					   	   + "[X] Faire la 2e couronne\n"
+					   	   + "[X] Faire la croix de la face opposée\n"
+	    				   + "[X] Orienter les derniers bords\n"
+	    				   + "[X] Faire les derniers coins\n"
+	    				   + "    [X] Placer les coins\n"
+	    				   + "    [X] Orienter les coins\n\n"	
+					   	   + "Rubik's Cube terminé !");
 		}
 	}
 	
@@ -500,7 +568,7 @@ public class View extends JFrame implements ActionListener, KeyListener {
     	{
     		// Count number of moves total
     		numberOfMoves = 0;
-    		while (solution.turn[numberOfMoves+1] != 0)
+    		while (solution.turn[numberOfMoves] != 0)
     			numberOfMoves++;
     		
     		// Do first move
@@ -880,7 +948,7 @@ public class View extends JFrame implements ActionListener, KeyListener {
 		
 		if (evt.getKeyCode() == KeyEvent.VK_ENTER) 
 		{
-			if (isSolving)
+			if (isSolving && moveI < numberOfMoves)
 			{
 				moveI++;
 				showMove();

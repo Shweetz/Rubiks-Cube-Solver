@@ -7,8 +7,6 @@ public class Solution {
 	String[] step;
 	boolean isSolvable;
 	
-	// firstCross : 25 moves max
-	
 	public Solution(int size)
 	{
 		move = new int[size];
