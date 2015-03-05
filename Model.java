@@ -409,6 +409,16 @@ public class Model {
 		if (solution.isSolvable == false || solvingStep.equals("second corners position"))
 			return solution;
 		
+		SolveSecondCornersOrientation answer7 = new SolveSecondCornersOrientation(answer6.rubiksCubeSCP);
+		answer7.doSecondCornersOrientation(solution);
+		
+		// If we get here, we went for a full solve
+		int lastMove = 0;
+		while (solution.turn[lastMove+1] != 0)
+			lastMove++;
+		solution.step[lastMove] = "finish";
+		 
+		
 		return solution;
 	}	
 }
