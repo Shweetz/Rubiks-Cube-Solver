@@ -83,7 +83,7 @@ public class SolveFirstCorners extends Model {
 							+ "sur une face latérale, couronne du haut. Pour cela, on le place au-dessus "
 							+ "de l'endroit où on le placera, on déplace le bord associé, on sort le coin de "
 							+ "la face tournée et on replace le bord.";
-					while (cornerPos[1]*cornerPos[2] != 4) // (cornerPos[1] != 2 && cornerPos[2] != 2)
+					while (cornerPos[1]*cornerPos[2] != 4) // (cornerPos[1] != 2 || (NOT &&) cornerPos[2] != 2)
 					{
 						fillAnswerTab(solution, rubiksCubeFirstCorners, 2, 1, message, "first corners"); // put corner on bottom-left
 						cornerPos = findUnitaryCorner(rubiksCubeFirstCorners, c1, c2);
