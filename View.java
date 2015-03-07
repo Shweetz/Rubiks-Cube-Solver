@@ -905,45 +905,63 @@ public class View extends JFrame implements ActionListener, KeyListener {
 
 		if (evt.getKeyCode() == KeyEvent.VK_W) // Si une case est sélectionnée, elle devient blanche 
 		{			
-			if (curI >= 0 && curI <= 2 && curJ >= 0 && curJ <= 2 && (curI != 1 || curJ != 1))
-				changerUneCouleur(Color.white);
-			
-			nextCell();		
+			if (curI >= 0 && curI <= 2 && curJ >= 0 && curJ <= 2)
+			{
+				if (curI != 1 || curJ != 1)
+					changerUneCouleur(Color.white);
+
+				nextCell();		
+			}			
 		}
 		if (evt.getKeyCode() == KeyEvent.VK_B) // Si une case est sélectionnée, elle devient blue 
 		{			
-			if (curI >= 0 && curI <= 2 && curJ >= 0 && curJ <= 2 && (curI != 1 || curJ != 1))
-				changerUneCouleur(Color.blue);
-			
-			nextCell();		
+			if (curI >= 0 && curI <= 2 && curJ >= 0 && curJ <= 2)
+			{
+				if (curI != 1 || curJ != 1)
+					changerUneCouleur(Color.blue);
+
+				nextCell();		
+			}	
 		}
 		if (evt.getKeyCode() == KeyEvent.VK_O) // Si une case est sélectionnée, elle devient orange 
 		{			
-			if (curI >= 0 && curI <= 2 && curJ >= 0 && curJ <= 2 && (curI != 1 || curJ != 1))
-				changerUneCouleur(Color.orange);
-			
-			nextCell();		
+			if (curI >= 0 && curI <= 2 && curJ >= 0 && curJ <= 2)
+			{
+				if (curI != 1 || curJ != 1)
+					changerUneCouleur(Color.orange);
+
+				nextCell();		
+			}			
 		}
 		if (evt.getKeyCode() == KeyEvent.VK_Y) // Si une case est sélectionnée, elle devient jaune 
 		{			
-			if (curI >= 0 && curI <= 2 && curJ >= 0 && curJ <= 2 && (curI != 1 || curJ != 1))
-				changerUneCouleur(Color.yellow);
-			
-			nextCell();		
+			if (curI >= 0 && curI <= 2 && curJ >= 0 && curJ <= 2)
+			{
+				if (curI != 1 || curJ != 1)
+					changerUneCouleur(Color.yellow);
+
+				nextCell();		
+			}		
 		}
 		if (evt.getKeyCode() == KeyEvent.VK_G) // Si une case est sélectionnée, elle devient verte 
 		{			
-			if (curI >= 0 && curI <= 2 && curJ >= 0 && curJ <= 2 && (curI != 1 || curJ != 1))
-				changerUneCouleur(Color.green);
-			
-			nextCell();		
+			if (curI >= 0 && curI <= 2 && curJ >= 0 && curJ <= 2)
+			{
+				if (curI != 1 || curJ != 1)
+					changerUneCouleur(Color.green);
+
+				nextCell();		
+			}			
 		}
 		if (evt.getKeyCode() == KeyEvent.VK_R) // Si une case est sélectionnée, elle devient rouge 
 		{			
-			if (curI >= 0 && curI <= 2 && curJ >= 0 && curJ <= 2 && (curI != 1 || curJ != 1))
-				changerUneCouleur(Color.red);
-			
-			nextCell();		
+			if (curI >= 0 && curI <= 2 && curJ >= 0 && curJ <= 2)
+			{
+				if (curI != 1 || curJ != 1)
+					changerUneCouleur(Color.red);
+
+				nextCell();		
+			}		
 		}
 		
 		if (evt.getKeyCode() == KeyEvent.VK_ENTER) 

@@ -142,8 +142,8 @@ public class Model {
 			{
 				for (int k = 0; k < 3; ++k)
 				{
-					// Find the good corner
-					if ((j+k)%2 == 0 && checkUnitaryCube(rubiksCubeToCheck, i, j, k, c1, c2))
+					// Find the good corner (j!=1 so that a center can't be considered as corner)
+					if ((j+k)%2 == 0 && checkUnitaryCube(rubiksCubeToCheck, i, j, k, c1, c2) && j!=1)
 					{
 						cornerPos[0] = i;
 						cornerPos[1] = j;

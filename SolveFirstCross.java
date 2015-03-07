@@ -119,13 +119,18 @@ public class SolveFirstCross extends Model {
 						+ "et finalement placer le bord. Ensuite on le met à droite pour laisser la place "
 						+ "au prochain bord.";
 
-				if 	    (edgePos[0]==0) timesToTurn = 0;
-				else if (edgePos[0]==1) timesToTurn = 3;
-				else if (edgePos[0]==3) timesToTurn = 2;
-				else if (edgePos[0]==4) timesToTurn = 1;
-				fillAnswerTab(solution, rubiksCubeFirstCross, 2, timesToTurn, message, "first cross");
-				fillAnswerTab(solution, rubiksCubeFirstCross, edgePos[0], 1, message, "first cross"); 	
-				fillAnswerTab(solution, rubiksCubeFirstCross, 2, 4-timesToTurn, message, "first cross");			
+				if (edgePos[1]==0) // side face, white slice, just bring the face down
+					fillAnswerTab(solution, rubiksCubeFirstCross, edgePos[0], 1, message, "first cross"); 	
+				else // side face, yellow slice, need not to break another white edge
+				{
+					if 	    (edgePos[0]==0) timesToTurn = 0;
+					else if (edgePos[0]==1) timesToTurn = 3;
+					else if (edgePos[0]==3) timesToTurn = 2;
+					else if (edgePos[0]==4) timesToTurn = 1;
+					fillAnswerTab(solution, rubiksCubeFirstCross, 2, timesToTurn, message, "first cross");
+					fillAnswerTab(solution, rubiksCubeFirstCross, edgePos[0], 1, message, "first cross"); 	
+					fillAnswerTab(solution, rubiksCubeFirstCross, 2, 4-timesToTurn, message, "first cross");	
+				}
 				edgePos = findUnitaryEdge(rubiksCubeFirstCross, c1, c2);
 			}
 			
