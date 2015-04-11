@@ -600,10 +600,7 @@ public class View extends JFrame implements ActionListener, KeyListener {
 		panelEtape = new JPanel(new BorderLayout());
 		panelEtape.setBorder(BorderFactory.createEtchedBorder());
 		panelMessage = new JPanel(new BorderLayout());
-		panelMessage.setBorder(BorderFactory.createEtchedBorder());
-		panelCube = new JPanel();
-		panelCube.setBorder(BorderFactory.createEtchedBorder());
-		panelCube.setLayout(new GridLayout(3,3)); 		
+		panelCube = new JPanel(new BorderLayout());
 		
 		// On crée la zone etape
 		ihmEtape = new JTextArea();
@@ -636,9 +633,11 @@ public class View extends JFrame implements ActionListener, KeyListener {
 		ihmMessage.addKeyListener(this);
 		JScrollPane scrollPane = new JScrollPane(ihmMessage);
 		panelMessage.add(scrollPane);
-				
-		// On crée le cube (face de devant)
+		
+		// On crée le cube
 		game = new Model();
+		
+		/* On crée le cube (face de devant)
 		Color[][] face = game.getFace(0);
 		
 		faceUnitaire = new JButton[3][3];
@@ -654,7 +653,9 @@ public class View extends JFrame implements ActionListener, KeyListener {
 				faceUnitaire[i][j].addKeyListener(this);
 				panelCube.add(faceUnitaire[i][j]);
 			}
-		}
+		}*/
+		JPanel cube = new Cube3D();
+		panelCube.add(cube);
 		
 		// On lie le tout		
 		panelTexte.add(panelEtape);	
