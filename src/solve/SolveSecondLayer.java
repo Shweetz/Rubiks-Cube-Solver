@@ -1,9 +1,13 @@
+package solve;
 
 import java.awt.Color;
 
+import main.Model;
+import main.Solution;
+
 public class SolveSecondLayer extends Model {
 
-	Color[][][] rubiksCubeSecondLayer = new Color[6][3][3];
+	public Color[][][] rubiksCubeSecondLayer = new Color[6][3][3];
 			
 	public SolveSecondLayer(Color[][][] rubiksCubeFirstCorners) 
 	{
@@ -178,7 +182,7 @@ public class SolveSecondLayer extends Model {
 		}
 	}
 	
-	void doSecondLayer(Solution solution)
+	public void doSecondLayer(Solution solution)
 	{
 		// Start with orange so that it doesn't scramble a solved first corners
 		doOneEdge(solution, Color.orange, Color.blue);

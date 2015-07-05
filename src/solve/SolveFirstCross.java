@@ -1,9 +1,13 @@
+package solve;
 
 import java.awt.Color;
 
+import main.Model;
+import main.Solution;
+
 public class SolveFirstCross extends Model {
 
-	Color[][][] rubiksCubeFirstCross = new Color[6][3][3];
+	public Color[][][] rubiksCubeFirstCross = new Color[6][3][3];
 			
 	public SolveFirstCross(Color[][][] rubiksCube) 
 	{
@@ -159,7 +163,7 @@ public class SolveFirstCross extends Model {
 		}
 	}
 	
-	void doFirstCross(Solution solution)
+	public void doFirstCross(Solution solution)
 	{		
 		// Start with blue so that it doesn't scramble a solved first cross
 		doOneEdge(solution, Color.white, Color.blue); 

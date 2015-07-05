@@ -1,9 +1,13 @@
+package solve;
 
 import java.awt.Color;
 
+import main.Model;
+import main.Solution;
+
 public class SolveSecondEdges extends Model {
 
-	Color[][][] rubiksCubeSecondEdges = new Color[6][3][3];
+	public Color[][][] rubiksCubeSecondEdges = new Color[6][3][3];
 			
 	public SolveSecondEdges(Color[][][] rubiksCubeSecondCross) 
 	{
@@ -23,7 +27,7 @@ public class SolveSecondEdges extends Model {
 		return numberOfEdges;
 	}
 	
-	void doSecondEdges(Solution solution)
+	public void doSecondEdges(Solution solution)
 	{
 		String message = "";
 		String edgesState = "";

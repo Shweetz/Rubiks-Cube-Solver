@@ -1,9 +1,13 @@
+package solve;
 
 import java.awt.Color;
 
+import main.Model;
+import main.Solution;
+
 public class SolveFirstCorners extends Model {
 
-	Color[][][] rubiksCubeFirstCorners = new Color[6][3][3];
+	public Color[][][] rubiksCubeFirstCorners = new Color[6][3][3];
 			
 	public SolveFirstCorners(Color[][][] rubiksCubeFirstCross) 
 	{
@@ -154,7 +158,7 @@ public class SolveFirstCorners extends Model {
 		}
 	}
 	
-	void doFirstCorners(Solution solution)
+	public void doFirstCorners(Solution solution)
 	{
 		// Start with orange so that it doesn't scramble a solved first corners
 		doOneCorner(solution, Color.white, Color.orange);

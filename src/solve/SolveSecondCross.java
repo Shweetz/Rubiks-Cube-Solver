@@ -1,9 +1,13 @@
+package solve;
 
 import java.awt.Color;
 
+import main.Model;
+import main.Solution;
+
 public class SolveSecondCross extends Model {
 
-	Color[][][] rubiksCubeSecondCross = new Color[6][3][3];
+	public Color[][][] rubiksCubeSecondCross = new Color[6][3][3];
 			
 	public SolveSecondCross(Color[][][] rubiksCubeSecondLayer) 
 	{
@@ -12,7 +16,7 @@ public class SolveSecondCross extends Model {
 		InitializeOtherSideTab();
 	}
 	
-	void doSecondCross(Solution solution)
+	public void doSecondCross(Solution solution)
 	{
 		String message = "";
 		String crossState = "";

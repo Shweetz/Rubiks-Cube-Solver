@@ -1,5 +1,9 @@
+package solve;
 
 import java.awt.Color;
+
+import main.Model;
+import main.Solution;
 
 public class SolveSecondCornersOrientation extends Model {
 
@@ -26,7 +30,7 @@ public class SolveSecondCornersOrientation extends Model {
 		return corner;
 	}
 	
-	void doSecondCornersOrientation(Solution solution)
+	public void doSecondCornersOrientation(Solution solution)
 	{
 		String message = "";
 		//String cornersState = "";

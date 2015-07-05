@@ -1,3 +1,5 @@
+package main;
+
 import java.awt.*;
 
 import com.sun.j3d.utils.geometry.ColorCube;

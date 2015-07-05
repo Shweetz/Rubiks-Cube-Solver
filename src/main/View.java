@@ -1,15 +1,27 @@
-﻿import java.awt.*;
+﻿package main;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.io.File;
+import java.io.RandomAccessFile;
+
+import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
 
 import javax.swing.*;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
-import java.awt.event.*;
-import java.io.File;
-import java.io.RandomAccessFile;
-
 @SuppressWarnings("serial")
 public class View extends JFrame implements ActionListener, KeyListener {
+	
+	private static int calculatedWidth = 100;
+	private static int calculatedHeight = 100;
 	
 	Model game;
 	Solution solution;
@@ -38,16 +50,17 @@ public class View extends JFrame implements ActionListener, KeyListener {
 	int moveI = 0;
 	int numberOfMoves = 0;
 	
-	public View(int largeur, int hauteur){ //on cree la fenetre
+	public View(int largeur, int hauteur){ // on cree la fenetre
 		super("Rubik's Cube");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(largeur, hauteur);
-		setLocationRelativeTo(null); // La fenêtre apparait au centre de l'écran
-
-		creerMenus();  
-		creerInterface();
 		
-		setVisible(true);		//show();
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setSize(largeur, hauteur);
+		this.setLocationRelativeTo(null); // La fenetre apparait au centre de l'ecran
+
+		this.creerMenus();  
+		this.creerInterface();
+		
+		this.setVisible(true);		//show();
 	}
 	
 	private void creerMenus() 
@@ -578,13 +591,8 @@ public class View extends JFrame implements ActionListener, KeyListener {
     	else
     	{
     		ihmMessage.setText("Rubik's cube non résolvable, vérifiez les couleurs entrées.\n\n"
-    				+ "Si elles sont justes, vous devez ouvrir le Rubik's cube et replacer les cubes "
-    				+ "correctement à la main.\n\n"
-    				+ "Attention, si votre Rubik's cube possède 2 petits cubes identiques ou 1 petit cube avec "
-    				+ "la même couleur sur 2 de ses faces, 2 options :\n"
-    				+ "- Ouvrir le Rubik's cube (conseillé, mais vous devrez décoller et recoller quelques étiquettes)\n"
-    				+ "- Décoller et recoller un grand nombre d'étiquettes (déconseillé, cela va plus abimer le cube "
-    				+ "et prendre plus longtemps).");
+    				+ "Si elles sont justes, il est conseillé de se rapprocher d'un "
+    				+ "Rubik's Cube fini pour avoir le moins d'étiquettes à décoller/recoller.");
     	}
 	}
 	
@@ -654,8 +662,27 @@ public class View extends JFrame implements ActionListener, KeyListener {
 				panelCube.add(faceUnitaire[i][j]);
 			}
 		}*/
-		JPanel cube = new Cube3D();
-		panelCube.add(cube);
+		
+		/*Model3D model=new Model3D();
+        model.importObj();
+        mapMeshes=model.getMapMeshes();
+        cube.getChildren().setAll(mapMeshes.values());*/
+		
+        //JPanel cube = new Cube3D();
+        JFXPanel jfxPanel = new JFXPanel();
+        Platform.runLater(() -> {
+        	final BorderPane pane = new BorderPane();
+        	Rubik rubik;
+
+        	rubik = new Rubik(calculatedWidth/2, calculatedHeight);
+
+    		pane.setCenter(rubik.getSubScene());
+
+    		final Scene scene = new Scene(pane, calculatedWidth/2, calculatedHeight, true);
+    		
+            jfxPanel.setScene(scene);
+        });
+		panelCube.add(jfxPanel);
 		
 		// On lie le tout		
 		panelTexte.add(panelEtape);	
@@ -1010,8 +1037,11 @@ public class View extends JFrame implements ActionListener, KeyListener {
             	if (height < (width/2)+50) 
             		width = (height-50)*2;
             	
+            	calculatedWidth = (int)(width/1.5);
+            	calculatedHeight = (int)(((width/2)+50)/1.5);
+            	
             	// Launch the application
-            	new View((int)(width/1.5), (int)(((width/2)+50)/1.5));
+            	new View(calculatedWidth, calculatedHeight);
             }
         });
 	}

@@ -1,12 +1,16 @@
-﻿
+﻿package main;
+
+
 import java.awt.*;
+
+import solve.*;
 
 public class Model {
 
 	private Solution solution;
 	
 	Color[][][] rubiksCube = new Color[6][3][3];
-	int[][][] otherSideOfUnitaryCube = new int[6][3][3];
+	protected int[][][] otherSideOfUnitaryCube = new int[6][3][3];
 	
 	public Model() 
 	{
@@ -29,7 +33,7 @@ public class Model {
 		}
 	}
 	
-	void InitializeOtherSideTab() // For corners, other side is the next side clockwise
+	protected void InitializeOtherSideTab() // For corners, other side is the next side clockwise
 	{
 		otherSideOfUnitaryCube[0][0][0] = 402; // 402 means [4][0][2]
 		otherSideOfUnitaryCube[0][0][1] = 221;
@@ -86,7 +90,7 @@ public class Model {
 		otherSideOfUnitaryCube[5][2][2] = 122;
 	}
 	
-	Color getOtherSideOfUnitaryCube(Color[][][] rubiksCubeToCheck, int i, int j, int k)
+	protected Color getOtherSideOfUnitaryCube(Color[][][] rubiksCubeToCheck, int i, int j, int k)
 	{
 		int int_otherSide = otherSideOfUnitaryCube[i][j][k];
 		
@@ -98,7 +102,7 @@ public class Model {
 		return rubiksCubeToCheck[tab[0]][tab[1]][tab[2]];	
 	}
 	
-	boolean checkUnitaryCube(Color[][][] rubiksCubeToCheck, int i, int j, int k, Color c1, Color c2)
+	protected boolean checkUnitaryCube(Color[][][] rubiksCubeToCheck, int i, int j, int k, Color c1, Color c2)
 	{
 		if (rubiksCubeToCheck[i][j][k].equals(c1) && (getOtherSideOfUnitaryCube(rubiksCubeToCheck,i,j,k)).equals(c2))
 			return true;
@@ -106,7 +110,7 @@ public class Model {
 		return false;
 	}
 	
-	int[] findUnitaryEdge(Color[][][] rubiksCubeToCheck, Color c1, Color c2)
+	protected int[] findUnitaryEdge(Color[][][] rubiksCubeToCheck, Color c1, Color c2)
 	{
 		int edgePos[] = {-1,-1,-1}; 
 		
@@ -132,7 +136,7 @@ public class Model {
 		return edgePos; 
 	}
 	
-	int[] findUnitaryCorner(Color[][][] rubiksCubeToCheck, Color c1, Color c2) // Give c2 clockwise to c1
+	protected int[] findUnitaryCorner(Color[][][] rubiksCubeToCheck, Color c1, Color c2) // Give c2 clockwise to c1
 	{		
 		int cornerPos[] = new int[3];
 		
@@ -156,7 +160,7 @@ public class Model {
 		return cornerPos;
 	}
 	
-	void fillAnswerTab(Solution solution, Color[][][] rubiksCubeToCheck, int faceToTurn, int timesToTurn, String messageToShow, String solveStep)
+	protected void fillAnswerTab(Solution solution, Color[][][] rubiksCubeToCheck, int faceToTurn, int timesToTurn, String messageToShow, String solveStep)
 	{
 		// Turn the cube to solve it
 		for (int i = 0; i < timesToTurn; i++)
@@ -355,7 +359,7 @@ public class Model {
 		}
 	}
 	
-	Color[][] turnFace(Color[][] face) // to the left : face[0][0] = face[2][0]
+	protected Color[][] turnFace(Color[][] face) // to the left : face[0][0] = face[2][0]
 	{
 		Color[][] face2 = new Color[3][3];
 		
@@ -369,7 +373,7 @@ public class Model {
 		return face2;
 	}	
 	
-	Solution solve(String solvingStep) // rubiksCube table doesn't change, just return a table with moves.
+	public Solution solve(String solvingStep) // rubiksCube table doesn't change, just return a table with moves.
 	{				
 		solution = new Solution(500);
 		
@@ -409,7 +413,7 @@ public class Model {
 		if (solution.isSolvable == false || solvingStep.equals("second corners position"))
 			return solution;
 		
-		SolveSecondCornersOrientation answer7 = new SolveSecondCornersOrientation(answer6.rubiksCubeSCP);
+		SolveSecondCornersOrientation answer7 = new SolveSecondCornersOrientation(answer6.rubiksCubeSecondCornersPosition);
 		answer7.doSecondCornersOrientation(solution);
 		
 		// If we get here, we went for a full solve
@@ -417,7 +421,6 @@ public class Model {
 		while (solution.turn[lastMove+1] != 0)
 			lastMove++;
 		solution.step[lastMove] = "finish";
-		 
 		
 		return solution;
 	}	
