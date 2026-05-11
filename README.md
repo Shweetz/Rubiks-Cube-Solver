@@ -3,6 +3,18 @@ Rubik's Cube Solver (Java)
 
 .exe to solve Rubik's cube coming soon here !
 
+### How to make a Java app into an .exe
+
+##### 1. Create a Runnable JAR File
+
+In VSC, run your java app. The console will tell you where is the folder where it executes. Open it (it should contains .class files).
+
+In this folder, create a file "manifest.mf" containing the text "Main-Class: YourMainClass". Then run in cmd "jar cfm MyApplication.jar manifest.mf *.class
+
+##### 2. Convert JAR to EXE
+
+Use Launch4J for ease of use, jpackage for native modern approach
+
 ### More information :
 
 ##### src/main 
