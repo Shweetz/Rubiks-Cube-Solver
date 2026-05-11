@@ -1,12 +1,11 @@
-package main;
 
 public class Solution {
 
-	public int[] move;
-	public int[] turn;
-	public String[] message;
-	public String[] step;
-	public boolean isSolvable;
+	int[] move;
+	int[] turn;
+	String[] message;
+	String[] step;
+	boolean isSolvable;
 	
 	public Solution(int size)
 	{

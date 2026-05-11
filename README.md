@@ -1,9 +1,7 @@
-Rubik's Cube Solver
-==============
+Rubik's Cube Solver (Java)
+==========================
 
-This is a <b>Java program that solves Rubik's Cubes</b>. 
-
-*Work In Progress* You can see the Rubik's Cube and flip it around but can't do anything else at the moment.
+.exe to solve Rubik's cube coming soon here !
 
 ### More information :
 
